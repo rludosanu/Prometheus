@@ -1,114 +1,191 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
-import React, {Fragment} from 'react';
+import React, {Component, Fragment} from 'react';
 import {
   SafeAreaView,
-  StyleSheet,
   ScrollView,
   View,
   Text,
-  StatusBar,
+  Button,
+  ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
+import {createSwitchNavigator, createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
+import AsyncStorage from '@react-native-community/async-storage';
+import {createStore, combineReducers, applyMiddleware} from 'redux';
+import {Provider, connect} from 'react-redux';
+import createSagaMiddleware from 'redux-saga';
+import {takeEvery, all, put, call} from 'redux-saga/effects';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+/************************ Settings ************************/
 
-const App = () => {
-  return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
-  );
+const APP_SETTINGS = {
+  language: 'en',
+  theme: 'light',
+  sync: false,
 };
 
+/************************ Reducers ************************/
+
+function settingsReducer(state = {}, action) {
+  const {type, payload} = action;
+
+  if (type === 'UPDATE_SETTINGS') {
+    return {...state, ...payload};
+  }
+  return state;
+}
+
+/************************ Sagas ************************/
+
+function* readSettings() {
+  const settings = yield call(AsyncStorage.getItem, '@settings');
+
+  yield put({
+    type: 'UPDATE_SETTINGS',
+    payload: settings || APP_SETTINGS,
+  });
+}
+
+function* watchSettings() {
+  console.log('[logsWatcher] takeEvery(READ_SETTINGS)');
+  yield takeEvery('READ_SETTINGS', readSettings);
+}
+
+function* rootSaga() {
+  console.log('[rootSaga] Setting up root saga...');
+  yield all([watchSettings()]);
+  console.log('[rootSaga] Done.');
+}
+
+/************************ StyleSheets ************************/
+
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+  fullScreenWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
-export default App;
+/************************ Components ************************/
+
+/**
+ * Display feed activity.
+ */
+class FeedScreen extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <View style={styles.fullScreenWrapper}>
+        <Text>FeedScreen</Text>
+        <Button
+          title={'Log Out'}
+          onPress={() => this.props.navigation.navigate('Auth')}
+        />
+      </View>
+    );
+  }
+}
+
+/**
+ * Log in the user.
+ */
+const LogInScreen = connect(
+  state => {
+    console.log('[LogInScreen]', state);
+    return state;
+  },
+  null,
+)(
+  class extends Component {
+    render() {
+      return (
+        <View style={styles.fullScreenWrapper}>
+          <Text>LogInScreen</Text>
+          <Button
+            title={'Log In'}
+            onPress={() => this.props.navigation.navigate('App')}
+          />
+        </View>
+      );
+    }
+  },
+);
+
+/**
+ * Load data on app startup.
+ */
+const LoadingScreen = connect(
+  state => {
+    return state;
+  },
+  dispatch => {
+    return {
+      readSettings: payload =>
+        dispatch({
+          type: 'READ_SETTINGS',
+        }),
+    };
+  },
+)(
+  class extends Component {
+    componentDidMount() {
+      console.log('[LoadingScreen] Reading settings from AsyncStorage...');
+      this.props.readSettings();
+      console.log('[LoadingScreen] Waiting for 1000 ms...');
+      setTimeout(() => {
+        console.log('[LoadingScreen] Redirecting to Auth Stack...');
+        this.props.navigation.navigate('Auth');
+      }, 1000);
+    }
+
+    render() {
+      return (
+        <View style={styles.fullScreenWrapper}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+  },
+);
+
+/************************ AppContainer ************************/
+
+const AppContainer = createAppContainer(
+  createSwitchNavigator(
+    {
+      Loading: LoadingScreen,
+      Auth: createStackNavigator({
+        LogIn: LogInScreen,
+      }),
+      App: createStackNavigator({
+        Feed: FeedScreen,
+      }),
+    },
+    {
+      initialRouteName: 'Loading',
+    },
+  ),
+);
+
+/************************ App ************************/
+
+export default function App(props) {
+  const sagaMiddleware = createSagaMiddleware();
+  const store = createStore(
+    combineReducers({
+      settings: settingsReducer,
+    }),
+    applyMiddleware(sagaMiddleware),
+  );
+
+  sagaMiddleware.run(rootSaga);
+  return (
+    <Provider store={store}>
+      <AppContainer />
+    </Provider>
+  );
+}
