@@ -1,16 +1,20 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {takeLatest, all, put, call} from 'redux-saga/effects';
-import {localLogIn, localVerifyToken} from '../modules';
+import { takeLatest, all, put, call } from 'redux-saga/effects';
+import { localLogIn, localVerifyToken } from '../modules';
 
-function* logIn(payload = {}) {
-  const {email, password} = payload;
+function* logIn({ email, password }) {
   const token = yield call(localLogIn, email, password);
 
   if (token) {
     yield call(AsyncStorage.setItem, '@token', token);
     yield put({
-      type: 'UPDATE_TOKEN',
-      payload: token || null,
+      type: 'SET_TOKEN',
+      token: token
+    });
+  } else {
+    yield put({
+      type: 'SET_ERROR',
+      error: 'Invalid email or password.'
     });
   }
 }
@@ -27,14 +31,12 @@ function* loadSettings() {
   yield put({
     type: 'UPDATE_SETTINGS',
     payload: settings || {
-      language: 'en',
-      theme: 'light',
-      sync: false,
-    },
+      sync: false
+    }
   });
   yield put({
-    type: 'UPDATE_TOKEN',
-    payload: verified ? token : null,
+    type: 'SET_TOKEN',
+    token: verified ? token : null,
   });
 }
 

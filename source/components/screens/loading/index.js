@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {View, ActivityIndicator, StyleSheet} from 'react-native';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { connect } from 'react-redux';
 
 const styles = StyleSheet.create({
   screen: {
@@ -16,12 +16,11 @@ export default connect(
   },
   dispatch => {
     return {
-      loadSettings: payload =>
-        dispatch({
-          type: 'LOAD_SETTINGS',
-        }),
+      loadSettings: payload => dispatch({
+        type: 'LOAD_SETTINGS'
+      })
     };
-  },
+  }
 )(
   class extends Component {
     componentDidMount() {
@@ -29,7 +28,6 @@ export default connect(
     }
 
     componentDidUpdate() {
-      console.log(this.props.token);
       this.props.navigation.navigate(this.props.token ? 'App' : 'Auth');
     }
 
@@ -40,5 +38,5 @@ export default connect(
         </View>
       );
     }
-  },
+  }
 );

@@ -1,33 +1,25 @@
 import {combineReducers} from 'redux';
 
 function settingsReducer(state = {}, action) {
-  const {type, payload} = action;
-
-  if (type === 'UPDATE_SETTINGS') {
+  if (action.type === 'UPDATE_SETTINGS') {
     return {
       ...state,
-      ...payload,
+      ...action.payload,
     };
   }
   return state;
 }
 
-function tokenReducer(state = {token: null}, action) {
-  const {type, payload} = action;
+function errorReducer(state = null, action) {
+  return (action.type === 'SET_ERROR') ? action.error : state;
+}
 
-  if (type === 'UPDATE_TOKEN' && payload) {
-    return {
-      token: payload,
-    };
-  } else if (type === 'REMOVE_TOKEN') {
-    return {
-      token: null,
-    };
-  }
-  return state;
+function tokenReducer(state = null, action) {
+  return (action.type === 'SET_TOKEN') ? action.token : state;
 }
 
 export default combineReducers({
-  settings: settingsReducer,
+  error: errorReducer,
   token: tokenReducer,
+  settings: settingsReducer,
 });
