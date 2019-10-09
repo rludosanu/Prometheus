@@ -1,14 +1,7 @@
 import React, { Component } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+import styles from './styles';
 
 export default connect(
   state => {
@@ -33,7 +26,7 @@ export default connect(
 
     render() {
       return (
-        <View style={styles.screen}>
+        <View style={ styles.screen }>
           <ActivityIndicator />
         </View>
       );

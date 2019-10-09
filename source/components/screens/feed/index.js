@@ -1,13 +1,6 @@
-import React, {Component} from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+import React, { Component } from 'react';
+import { View, Text, Button } from 'react-native';
+import styles from './styles';
 
 export default class FeedScreen extends Component {
   constructor(props) {
@@ -16,11 +9,11 @@ export default class FeedScreen extends Component {
 
   render() {
     return (
-      <View style={styles.screen}>
+      <View style={ styles.screen }>
         <Text>FeedScreen</Text>
         <Button
-          title={'Log Out'}
-          onPress={() => this.props.navigation.navigate('Auth')}
+          title={ 'Log Out' }
+          onPress={ () => this.props.navigation.navigate('Auth') }
         />
       </View>
     );
