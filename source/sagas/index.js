@@ -2,48 +2,62 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { takeLatest, all, put, call } from 'redux-saga/effects';
 import { localLogIn, localVerifyToken } from '../modules';
 
-function* logIn({ email, password }) {
-  const token = yield call(localLogIn, email, password);
+function buildLoginLoading() {
+  return {
+    type: 'LOGIN_LOADING'
+  };
+}
 
-  if (token) {
-    yield call(AsyncStorage.setItem, '@token', token);
-    yield put({
-      type: 'SET_TOKEN',
+function buildLoginSucceeded(token) {
+  return {
+    type: 'LOGIN_SUCCEEDED',
+    payload: {
       token: token
-    });
+    }
+  };
+}
+
+function buildLoginFailed(error) {
+  return {
+    type: 'LOGIN_FAILED',
+    payload: {
+      error: error || null
+    }
+  };
+}
+
+function* logOutSaga() {
+  yield call(AsyncStorage.removeItem, '@token');
+  yield put({
+    type: 'LOGOUT_SUCCEEDED'
+  });
+}
+
+function* logInSaga({ email, password }) {
+  let token;
+
+  yield put(buildLoginLoading());
+  if ((token = yield call(localLogIn, email, password))) {
+    yield call(AsyncStorage.setItem, '@token', token);
+    yield put(buildLoginSucceeded(token));
   } else {
-    yield put({
-      type: 'SET_ERROR',
-      error: 'Invalid email or password.'
-    });
+    yield put(buildLoginFailed('Invalid email address or password.'));
   }
 }
 
-function* watchLogIn() {
-  yield takeLatest('LOG_IN', logIn);
-}
+function* autoLogInSaga() {
+  let token;
 
-function* loadSettings() {
-  const settings = yield call(AsyncStorage.getItem, '@settings');
-  const token = yield call(AsyncStorage.getItem, '@token');
-  const verified = yield call(localVerifyToken, token);
-
-  yield put({
-    type: 'UPDATE_SETTINGS',
-    payload: settings || {
-      sync: false
-    }
-  });
-  yield put({
-    type: 'SET_TOKEN',
-    token: verified ? token : null,
-  });
-}
-
-function* watchSettings() {
-  yield takeLatest('LOAD_SETTINGS', loadSettings);
+  yield put(buildLoginLoading());
+  if ((token = yield call(AsyncStorage.getItem, '@token'))) {
+    yield put(buildLoginSucceeded(token));
+  } else {
+    yield put(buildLoginFailed());
+  }
 }
 
 export default function* rootSaga() {
-  yield all([watchSettings(), watchLogIn()]);
+  yield takeLatest('AUTO_LOGIN_REQUEST', autoLogInSaga);
+  yield takeLatest('LOGIN_REQUEST', logInSaga);
+  yield takeLatest('LOGOUT_REQUEST', logOutSaga);
 }

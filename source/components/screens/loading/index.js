@@ -9,19 +9,25 @@ export default connect(
   },
   dispatch => {
     return {
-      loadSettings: payload => dispatch({
-        type: 'LOAD_SETTINGS'
+      autoLogIn: () => dispatch({
+        type: 'AUTO_LOGIN_REQUEST'
       })
     };
   }
 )(
   class extends Component {
     componentDidMount() {
-      this.props.loadSettings();
+      this.props.autoLogIn();
     }
 
-    componentDidUpdate() {
-      this.props.navigation.navigate(this.props.token ? 'App' : 'Auth');
+    componentDidUpdate(props) {
+      if (!this.props.user.isLoading) {
+        if (props.user.token !== this.props.user.token && this.props.user.token) {
+          this.props.navigation.navigate('App');
+        } else {
+          this.props.navigation.navigate('Auth');
+        }
+      }
     }
 
     render() {

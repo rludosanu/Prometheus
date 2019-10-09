@@ -6,7 +6,7 @@ export function localLogIn(email = null, password = null) {
       } else {
         resolve(null);
       }
-    }, 1000),
+    }, 2000),
   );
 }
 
@@ -18,6 +18,6 @@ export function localVerifyToken(token = null) {
       } else {
         resolve(false);
       }
-    }, 1000),
+    }, 2000),
   );
 }

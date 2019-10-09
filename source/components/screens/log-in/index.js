@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 
@@ -10,7 +10,7 @@ export default connect(
   dispatch => {
     return {
       logIn: payload => dispatch({
-        type: 'LOG_IN',
+        type: 'LOGIN_REQUEST',
         ...payload
       })
     };
@@ -24,35 +24,20 @@ export default connect(
     constructor(props) {
       super(props);
       this.state = {
-        email: '',
-        password: '',
-        isLoading: false
+        email: 'hello@world.com',
+        password: 'helloworld'
       };
     }
 
-    componentDidMount() {
-      //
-    }
-
-    componentDidUpdate() {
-      this.setState({
-        isLoading: false
-      });
-    }
-
-    _logIn = () => {
-      const { email, password } = this.state;
-
-      this.setState({
-        isLoading: true
-      }, () => {
-        this.props.logIn({ email, password });
-      });
+    componentDidUpdate(props) {
+      if (props.user.token !== this.props.user.token && this.props.user.token) {
+        this.props.navigation.navigate('App');
+      }
     }
 
     render() {
-      const { error } = this.props;
-      const { email, password, isLoading } = this.state;
+      const { error, isLoading } = this.props.user;
+      const { email, password } = this.state;
 
       return (
         <View style={ styles.screen }>
@@ -73,7 +58,12 @@ export default connect(
             value={ password }
             secureTextEntry={ true }
           />
-          { error !== null && error.length && (
+          { isLoading === true && (
+            <View style={ styles.error }>
+              <ActivityIndicator />
+            </View>
+          ) }
+          { error !== null && (
             <View style={ styles.error }>
               <Text style={ styles.errorText }>{ error }</Text>
             </View>
