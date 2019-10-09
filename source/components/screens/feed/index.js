@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 
+/**
+ * Feed Screen
+ */
 export default connect(
   state => {
     return state;
@@ -18,6 +21,13 @@ export default connect(
       header: null,
     };
 
+    constructor(props) {
+      super(props);
+      this.state = {
+        search: ''
+      };
+    }
+
     componentDidUpdate(props) {
       if (props.user.token !== this.props.user.token && !this.props.user.token) {
         this.props.navigation.navigate('Auth');
@@ -27,11 +37,18 @@ export default connect(
     render() {
       return (
         <View style={ styles.screen }>
-          <Text>FeedScreen</Text>
-          <Button
-            title={ 'Log Out' }
+          <TouchableOpacity
+            style={{ padding: 20, backgroundColor: '#007ACA' }}
+            onPress={ () => this.props.navigation.navigate('Settings') }
+          >
+            <Text style={{ color: 'white' }}>Settings</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ padding: 20, backgroundColor: '#007ACA' }}
             onPress={ this.props.logOut }
-          />
+          >
+            <Text style={{ color: 'white' }}>Log Out</Text>
+          </TouchableOpacity>
         </View>
       );
     }
