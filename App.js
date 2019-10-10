@@ -15,6 +15,16 @@ import CoachScreen from './source/components/screens/coach';
 import ProfileScreen from './source/components/screens/profile';
 import Feather from 'react-native-vector-icons/Feather';
 
+class WorkoutsListScreen extends React.Component {
+  render() {
+    return (
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={{fontSize: 15}}>WorkoutsList</Text>
+      </View>
+    );
+  }
+}
+
 const AppContainer = createAppContainer(
   createSwitchNavigator({
     Loading: LoadingScreen,
@@ -34,7 +44,14 @@ const AppContainer = createAppContainer(
         })
       },
       Coach: {
-        screen: CoachScreen,
+        screen: createStackNavigator({
+          Home: {
+            screen: CoachScreen
+          },
+          WorkoutsList: {
+            screen: WorkoutsListScreen
+          }
+        }),
         navigationOptions: () => ({
           tabBarIcon: ({ tintColor }) => (
             <Feather

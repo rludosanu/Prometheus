@@ -30,7 +30,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#EBEBEB',
     padding: 15,
-    borderRadius: 6,
+    borderRadius: 4,
     marginTop: 20
   },
   logLabel: {
