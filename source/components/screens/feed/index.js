@@ -1,55 +1,77 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text } from 'react-native';
 import { connect } from 'react-redux';
+import Feather from 'react-native-vector-icons/Feather';
 import styles from './styles';
 
-/**
- * Feed Screen
- */
+function Item(props) {
+  return (
+    <View style={ styles.container }>
+      <View style={ styles.header }>
+        <Feather style={ styles.headerIcon } name={ 'hexagon' } />
+        <View>
+          <Text style={ styles.headerUserName }>{ props.username }</Text>
+          <Text style={ styles.headerDate }>{ props.date }</Text>
+        </View>
+      </View>
+      <View style={ styles.log }>
+        <Text style={ styles.logLabel }>{ props.label }</Text>
+        <Text style={ styles.logChrono }>{ props.chrono }</Text>
+      </View>
+      { props.comment !== null && props.comment.length > 0 && (
+        <View style={ styles.comment }>
+          <Text style={ styles.commentText }>{ props.comment }</Text>
+        </View>
+      ) }
+      <View style={ styles.social }>
+        <Feather style={ styles.socialIcon } name={ 'heart' } />
+        <Text style={ styles.socialStats }>1.5K</Text>
+        <Feather style={ styles.socialIcon } name={ 'message-circle' } />
+        <Text style={ styles.socialStats }>296</Text>
+      </View>
+    </View>
+  );
+}
+
 export default connect(
-  state => {
-    return state;
-  },
-  dispatch => {
-    return {
-      logOut: () => dispatch({ type: 'LOGOUT_REQUEST' })
-    }
-  }
+  state => state,
+  null
 )(
   class extends Component {
-    static navigationOptions = {
-      header: null,
-    };
-
-    constructor(props) {
-      super(props);
-      this.state = {
-        search: ''
-      };
-    }
-
-    componentDidUpdate(props) {
-      if (props.user.token !== this.props.user.token && !this.props.user.token) {
-        this.props.navigation.navigate('Auth');
-      }
-    }
-
     render() {
+      const data = [{
+        username: 'Razvan Ludosanu',
+        date: '2d',
+        label: '10x Burpee Squat Jumps',
+        chrono: '00:45',
+        comment: 'What a great way to start the week !',
+      }, {
+        username: 'Razvan Ludosanu',
+        date: '3d',
+        label: '50x Jumping Jacks',
+        chrono: '01:23',
+        comment: null,
+      }, {
+        username: 'Guillaume Beuriot',
+        date: '3d',
+        label: '1x Athena',
+        chrono: '08:32',
+        comment: 'Cardio killer !!!',
+      }];
+
       return (
-        <View style={ styles.screen }>
-          <TouchableOpacity
-            style={{ padding: 20, backgroundColor: '#007ACA' }}
-            onPress={ () => this.props.navigation.navigate('Settings') }
-          >
-            <Text style={{ color: 'white' }}>Settings</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ padding: 20, backgroundColor: '#007ACA' }}
-            onPress={ this.props.logOut }
-          >
-            <Text style={{ color: 'white' }}>Log Out</Text>
-          </TouchableOpacity>
-        </View>
+        <ScrollView style={{ backgroundColor: 'white' }}>
+          { data.map((item, index) => (
+            <Item
+              key={ `feed-item-${index}` }
+              username={ item.username }
+              date={ item.date }
+              label={ item.label }
+              chrono={ item.chrono }
+              comment={ item.comment }
+            />
+          )) }
+        </ScrollView>
       );
     }
   }
