@@ -46,7 +46,7 @@ function TouchableImage(props) {
   );
 }
 
-function CircleRate(props) {
+function CircleRating(props) {
   const applyStyle = (base, count) => ({
     fontSize: 8,
     color: count >= base ? '#161616' : '#EBEBEB',
@@ -60,6 +60,65 @@ function CircleRate(props) {
       <Feather style={ applyStyle(2, props.count) } name={ 'hexagon' } />
       <Feather style={ applyStyle(3, props.count) } name={ 'hexagon' } />
     </Fragment>
+  );
+}
+
+function FeaturedTile(props) {
+  const style = {
+    body: {
+      justifyContent: 'space-between',
+      backgroundColor: 'white',
+      padding: 15,
+      width: 240,
+      height: 120,
+      marginLeft: props.isFirst ? 20 : 10,
+      marginRight: props.isLast ? 20 : 10
+    },
+    label: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#161616'
+    },
+    description: {
+      fontSize: 15,
+      color: '#7F7F7F'
+    },
+    footer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    footerTag: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    footerTagText: {
+      fontSize: 15,
+      color: '#7F7F7F',
+      marginRight: 4
+    },
+  };
+
+  return (
+    <TouchableOpacity
+      onPress={ props.onPress }
+      style={ style.body }
+    >
+      <View>
+        <Text style={ style.label }>{ props.label }</Text>
+        <Text style={ style.description }>{ props.description }</Text>
+      </View>
+      <View style={ style.footer }>
+        <View style={ style.footerTag }>
+          <Text style={ style.footerTagText }>Level</Text>
+          <CircleRating count={ props.level } />
+        </View>
+        <View style={ style.footerTag }>
+          <Text style={ style.footerTagText }>Duration</Text>
+          <CircleRating count={ props.duration } />
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 }
 
@@ -79,22 +138,16 @@ function TouchableImageWithList(props) {
           horizontal={ true }
         >
           { props.featured.map((item, index) => (
-            <View key={ index } style={{ justifyContent: 'space-between', backgroundColor: 'white', padding: 15, width: 240, height: 120, marginLeft: index === 0 ? 20 : 10, marginRight: index === props.featured.length - 1 ? 20 : 10 }}>
-              <View>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#161616' }}>{ item.label }</Text>
-                <Text style={{ fontSize: 15, color: '#7F7F7F' }}>{ item.description }</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={{ fontSize: 15, color: '#7F7F7F', marginRight: 4 }}>Level</Text>
-                  <CircleRate count={ item.level } />
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={{ fontSize: 15, color: '#7F7F7F', marginRight: 4 }}>Duration</Text>
-                  <CircleRate count={ item.duration } />
-                </View>
-              </View>
-            </View>
+            <FeaturedTile
+              key={ `featured-tile-${index}` }
+              onPress={ item.onPress }
+              isFirst={ index === 0 }
+              isLast={ index === props.featured.length - 1 }
+              label={ item.label }
+              description={ item.description }
+              level={ item.level }
+              duration={ item.duration }
+            />
           )) }
         </ScrollView>
       </ImageBackground>
@@ -111,38 +164,40 @@ export default connect(
       return (
         <ScrollView style={ styles.container }>
           <TouchableImageWithList
-            onPress={() => {}}
-            background={'https://images.pexels.com/photos/2261482/pexels-photo-2261482.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}
             label={'WORKOUTS'}
             description={'Prometheus signature workouts'}
+            background={'https://images.pexels.com/photos/2261482/pexels-photo-2261482.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}
             featured={[{
               label: 'ATHENA',
               description: 'Core, Lower Body',
               level: 1,
               duration: 3,
+              onPress: () => this.props.navigation.navigate('Preview', { type: 'workout', id: 'ath' }),
             }, {
               label: 'PROMETHEUS',
               description: 'Core, Upper body',
               level: 2,
               duration: 1,
+              onPress: () => this.props.navigation.navigate('Preview', { type: 'workout', id: 'pth' }),
             }, {
               label: 'HYPERION',
               description: 'Core, Upper body',
               level: 2,
               duration: 3,
+              onPress: () => this.props.navigation.navigate('Preview', { type: 'workout', id: 'hyp' }),
             }]}
           />
           <TouchableImage
-            onPress={() => {}}
-            background={'https://images.pexels.com/photos/949132/pexels-photo-949132.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}
             label={'SINGLE EXERCICES'}
             description={'Target specific muscles'}
+            background={'https://images.pexels.com/photos/949132/pexels-photo-949132.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}
+            onPress={() => {}}
           />
           <TouchableImage
-            onPress={() => {}}
-            background={'https://images.pexels.com/photos/186405/pexels-photo-186405.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}
             label={'SPRINTS & RUNS'}
             description={'Train on the road or track'}
+            background={'https://images.pexels.com/photos/186405/pexels-photo-186405.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'}
+            onPress={() => {}}
           />
         </ScrollView>
       );
