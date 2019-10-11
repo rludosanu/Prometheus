@@ -11,7 +11,7 @@ import Feather from 'react-native-vector-icons/Feather';
 function Title(props) {
   return (
     <View style={{marginBottom: 10}}>
-      <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>
+      <Text style={{fontSize: 22, fontWeight: 'bold', color: 'white'}}>
         {props.value}
       </Text>
     </View>
