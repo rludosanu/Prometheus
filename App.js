@@ -8,12 +8,13 @@ import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import rootReducer from './source/reducers';
 import rootSaga from './source/sagas';
+import Feather from 'react-native-vector-icons/Feather';
 import LoadingScreen from './source/components/screens/loading';
 import LogInScreen from './source/components/screens/log-in';
 import FeedScreen from './source/components/screens/feed';
 import CoachScreen from './source/components/screens/coach';
 import ProfileScreen from './source/components/screens/profile';
-import Feather from 'react-native-vector-icons/Feather';
+import WorkoutPreviewScreen from './source/components/screens/workout/preview';
 
 class WorkoutsListScreen extends React.Component {
   render() {
@@ -50,6 +51,9 @@ const AppContainer = createAppContainer(
           },
           WorkoutsList: {
             screen: WorkoutsListScreen
+          },
+          WorkoutPreview: {
+            screen: WorkoutPreviewScreen
           }
         }),
         navigationOptions: () => ({

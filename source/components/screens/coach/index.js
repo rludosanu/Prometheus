@@ -25,19 +25,19 @@ export default connect(
               description: 'Core, Lower Body',
               level: 1,
               duration: 3,
-              onPress: () => this.props.navigation.navigate('WorkoutsList', { type: 'workout', id: 'ath' }),
+              onPress: () => this.props.navigation.navigate('WorkoutPreview', { id: 'ath', title: 'Athena' }),
             }, {
               label: 'Prometheus',
               description: 'Core, Upper body',
               level: 2,
               duration: 1,
-              onPress: () => this.props.navigation.navigate('WorkoutsList', { type: 'workout', id: 'pth' }),
+              onPress: () => this.props.navigation.navigate('WorkoutPreview', { id: 'pth', title: 'Prometheus' }),
             }, {
               label: 'Hyperion',
               description: 'Core, Upper body',
               level: 2,
               duration: 3,
-              onPress: () => this.props.navigation.navigate('WorkoutsList', { type: 'workout', id: 'hyp' }),
+              onPress: () => this.props.navigation.navigate('WorkoutPreview', { id: 'hyp', title: 'Hyperion' }),
             }]}
           />
           <Card
