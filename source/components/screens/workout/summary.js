@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     color: '#B6B6B4',
     fontSize: 15,
     fontWeight: 'bold',
-    marginBottom: 10
+    marginBottom: 15
   },
   row: {
     flexDirection: 'row',

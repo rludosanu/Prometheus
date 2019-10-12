@@ -4,13 +4,14 @@ import {
   View,
   Text,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   ImageBackground,
   Dimensions,
   StyleSheet
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const stylesCCI = StyleSheet.create({
   container: {
@@ -55,73 +56,77 @@ const stylesCCI = StyleSheet.create({
 });
 
 const stylesCC = StyleSheet.create({
-  container: {
-    // borderTopWidth: 10,
-    // borderTopColor: '#161616'
-  },
   background: {
     width: width,
-    height: 260
+    height: 300
   },
   body: {
     padding: 20
   },
   label: {
-    fontSize: 25,
+    fontSize: 36,
     color: 'white',
     fontWeight: 'bold',
-    width: (width / 2),
     marginBottom: 4
   },
   description: {
-    fontSize: 15,
+    fontSize: 16,
     color: '#EBEBEB',
     fontWeight: 'bold',
-    width: (width / 2)
+    width: (width / 2) - 40
   }
 });
 
-function CardCarouselRatings(props) {
-  const applyStyle = (base, count) => ({
+function CardCarouselRatings({ count }) {
+  const applyStyle = (b, c) => ({
     fontSize: 8,
-    color: count >= base ? '#161616' : '#EBEBEB',
+    color: c >= b ? '#161616' : '#EBEBEB',
     marginLeft: 2,
     marginTop: 4
   });
 
   return (
     <Fragment>
-      <Feather style={applyStyle(1, props.count)} name={'hexagon'} />
-      <Feather style={applyStyle(2, props.count)} name={'hexagon'} />
-      <Feather style={applyStyle(3, props.count)} name={'hexagon'} />
+      <Feather
+        style={ applyStyle(1, count) }
+        name={ 'hexagon' }
+      />
+      <Feather
+        style={ applyStyle(2, count) }
+        name={ 'hexagon' }
+      />
+      <Feather
+        style={ applyStyle(3, count) }
+        name={ 'hexagon' }
+      />
     </Fragment>
   );
 }
 
 function CardCarouselItem(props) {
   return (
-    <TouchableWithoutFeedback onPress={props.onPress}>
-      <View style={[stylesCCI.container, {marginLeft: props.isFirst ? 20 : 10, marginRight: props.isLast ? 20 : 10}]}>
-        <View style={stylesCCI.body}>
-          <Text style={stylesCCI.label}>
-            {props.label}
+    <TouchableWithoutFeedback onPress={ props.onPress }>
+      <View style={ [stylesCCI.container, { marginLeft: props.isFirst ? 20 : 10, marginRight: props.isLast ? 20 : 10 }] }>
+        <View style={ stylesCCI.body }>
+          <Text style={ stylesCCI.label }>
+            { props.label }
           </Text>
-          <Text style={stylesCCI.description}>
-            {props.description}
+          <Text style={ stylesCCI.description }>
+            { props.description }
           </Text>
         </View>
-        <View style={stylesCCI.footer}>
-          <View style={stylesCCI.footerTag}>
-            <Text style={stylesCCI.footerTagText}>
+        <View style={ stylesCCI.footer }>
+          <View style={ stylesCCI.footerTag }>
+            <Text style={ stylesCCI.footerTagText }>
               Level
             </Text>
-            <CardCarouselRatings count={props.level} />
+            <CardCarouselRatings count={ props.level } />
           </View>
-          <View style={stylesCCI.footerTag}>
-            <Text style={stylesCCI.footerTagText}>
+          <View style={ stylesCCI.footerTag }>
+            <Text style={ stylesCCI.footerTagText }>
               Duration
             </Text>
-            <CardCarouselRatings count={props.duration} />
+            <CardCarouselRatings count={ props.duration } />
           </View>
         </View>
       </View>
@@ -131,34 +136,38 @@ function CardCarouselItem(props) {
 
 export default function CardCarousel(props) {
   return (
-    <View style={stylesCC.container}>
-      <ImageBackground
-        source={{uri: props.background}}
-        style={stylesCC.background}
+    <ImageBackground
+      source={{ uri: props.background }}
+      style={ stylesCC.background }
+    >
+      <View style={ stylesCC.body }>
+        <Text style={ stylesCC.label }>
+          { props.label }
+        </Text>
+        <Text style={ stylesCC.description }>
+          { props.description }
+        </Text>
+      </View>
+      <ScrollView horizontal={ true }>
+        { props.featured.map((item, index) => (
+          <CardCarouselItem
+            key={ `featured-tile-${index}` }
+            onPress={ item.onPress }
+            isFirst={ index === 0 }
+            isLast={ index === props.featured.length - 1 }
+            label={ item.label }
+            description={ item.description }
+            level={ item.level }
+            duration={ item.duration }
+          />
+        )) }
+      </ScrollView>
+      <TouchableOpacity
+        style={{ paddingLeft: 20, paddingRight: 20, marginTop: 10, marginBottom: 20, justifyContent: 'flex-end' }}
+        onPress={ props.onPress }
       >
-        <View style={stylesCC.body}>
-          <Text style={stylesCC.label}>
-            {props.label}
-          </Text>
-          <Text style={stylesCC.description}>
-            {props.description}
-          </Text>
-        </View>
-        <ScrollView horizontal={true}>
-          {props.featured.map((item, index) => (
-            <CardCarouselItem
-              key={`featured-tile-${index}`}
-              onPress={item.onPress}
-              isFirst={index === 0}
-              isLast={index === props.featured.length - 1}
-              label={item.label}
-              description={item.description}
-              level={item.level}
-              duration={item.duration}
-            />
-          )) }
-        </ScrollView>
-      </ImageBackground>
-    </View>
+        <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white', textAlign: 'right' }}>See All</Text>
+      </TouchableOpacity>
+    </ImageBackground>
   );
 }

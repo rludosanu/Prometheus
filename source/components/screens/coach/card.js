@@ -23,34 +23,36 @@ const styles = StyleSheet.create({
     padding: 20
   },
   label: {
-    fontSize: 25,
+    fontSize: 26,
     color: 'white',
     fontWeight: 'bold',
-    width: (width / 2),
-    marginBottom: 4
+    marginBottom: -2
   },
   description: {
-    fontSize: 15,
+    marginTop: 6,
+    fontSize: 16,
     color: '#EBEBEB',
     fontWeight: 'bold',
-    width: (width / 2)
+    width: (width / 2) - 40
   }
 });
 
 export default function Card(props) {
   return (
-    <TouchableWithoutFeedback onPress={props.onPress}>
-      <View style={styles.container}>
+    <TouchableWithoutFeedback onPress={ props.onPress }>
+      <View style={ styles.container }>
         <ImageBackground
-          source={{uri: props.background}}
-          style={styles.background}
+          source={{ uri: props.background }}
+          style={ styles.background }
         >
-          <View style={styles.body}>
-            <Text style={styles.label}>
-              {props.label}
-            </Text>
-            <Text style={styles.description}>
-              {props.description}
+          <View style={ styles.body }>
+            { props.label.map((item, index) => (
+              <Text key={ index } style={ styles.label }>
+                { item }
+              </Text>
+            )) }
+            <Text style={ styles.description }>
+              { props.description }
             </Text>
           </View>
         </ImageBackground>

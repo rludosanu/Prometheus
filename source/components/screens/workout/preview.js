@@ -5,12 +5,14 @@ import {
   Text,
   Image,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
 import About from './about';
 import Summary from './summary';
 import Leaderboard from './leaderboard';
+
+const { width } = Dimensions.get('window');
 
 const videos = [
   'https://images.pexels.com/photos/2294354/pexels-photo-2294354.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
@@ -47,6 +49,37 @@ const users = [{
   chrono: '06:43'
 }];
 
+function StartButton(props) {
+  const css = {
+    button: {
+      backgroundColor: '#007ACA',
+      borderRadius: 4,
+      alignSelf: 'stretch',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 16,
+      position: 'absolute',
+      zIndex: 999,
+      bottom: 10,
+      left: 10,
+      width: width - 20
+    },
+    text: {
+      color: 'white',
+      fontSize: 15,
+      fontWeight: 'bold'
+    }
+  };
+
+  return (
+    <TouchableOpacity style={ css.button } onPress={ () => {} }>
+      <Text style={ css.text }>
+        Start
+      </Text>
+    </TouchableOpacity>
+  );
+}
+
 export default class WorkoutPreviewScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
@@ -63,29 +96,37 @@ export default class WorkoutPreviewScreen extends Component {
   }
 
   render() {
+    const css = {
+      wrapper: {
+        flex: 1,
+        backgroundColor: '#161616'
+      },
+      container: {
+        paddingTop: 10,
+        paddingBottom: 60,
+        paddingLeft: 20,
+        paddingRight: 20
+      }
+    }
+
     return (
-      <ScrollView style={{ backgroundColor: '#161616' }}>
-        <View style={{ padding: 20 }}>
-          <About
-            equipment={ equipment }
-            videos={ videos }
-          />
-          <Summary
-            value={ workout }
-          />
-          <Leaderboard
-            value={ users }
-          />
-          <TouchableOpacity
-            style={{ backgroundColor: '#007ACA', borderRadius: 6, alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center', padding: 15, marginBottom: 20 }}
-            onPress={ () => {} }
-          >
-            <Text style={{ color: 'white', fontSize: 15 }}>
-              Start
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+      <View style={ css.wrapper }>
+        <StartButton />
+        <ScrollView>
+          <View style={ css.container }>
+            <About
+              equipment={ equipment }
+              videos={ videos }
+            />
+            <Summary
+              value={ workout }
+            />
+            <Leaderboard
+              value={ users }
+            />
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 }

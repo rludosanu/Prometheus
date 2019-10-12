@@ -1,30 +1,27 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
+
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import rootReducer from './source/reducers';
 import rootSaga from './source/sagas';
+
 import Feather from 'react-native-vector-icons/Feather';
+
 import LoadingScreen from './source/components/screens/loading';
 import LogInScreen from './source/components/screens/log-in';
 import FeedScreen from './source/components/screens/feed';
 import CoachScreen from './source/components/screens/coach';
 import ProfileScreen from './source/components/screens/profile';
+import WorkoutsListScreen from './source/components/screens/workout/list';
 import WorkoutPreviewScreen from './source/components/screens/workout/preview';
-
-class WorkoutsListScreen extends React.Component {
-  render() {
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text style={{fontSize: 15}}>WorkoutsList</Text>
-      </View>
-    );
-  }
-}
+import ExercisesListScreen from './source/components/screens/exercise/list';
+import ExercisePreviewScreen from './source/components/screens/exercise/preview';
 
 const AppContainer = createAppContainer(
   createSwitchNavigator({
@@ -44,6 +41,17 @@ const AppContainer = createAppContainer(
           ),
         })
       },
+      Stared: {
+        screen: (p) => (<View></View>),
+        navigationOptions: () => ({
+          tabBarIcon: ({ tintColor }) => (
+            <Feather
+              style={{ fontSize: 26, color: tintColor }}
+              name={ 'bookmark' }
+            />
+          ),
+        })
+      },
       Coach: {
         screen: createStackNavigator({
           Home: {
@@ -54,7 +62,13 @@ const AppContainer = createAppContainer(
           },
           WorkoutPreview: {
             screen: WorkoutPreviewScreen
-          }
+          },
+          ExercisesList: {
+            screen: ExercisesListScreen
+          },
+          ExercisePreview: {
+            screen: ExercisePreviewScreen
+          },
         }),
         navigationOptions: () => ({
           tabBarIcon: ({ tintColor }) => (
@@ -75,7 +89,18 @@ const AppContainer = createAppContainer(
             />
           ),
         })
-      }
+      },
+      Notifications: {
+        screen: (p) => (<View></View>),
+        navigationOptions: () => ({
+          tabBarIcon: ({ tintColor }) => (
+            <Feather
+              style={{ fontSize: 26, color: tintColor }}
+              name={ 'hash' }
+            />
+          ),
+        })
+      },
     }, {
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOptions: {

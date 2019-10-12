@@ -2,7 +2,12 @@ import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  text: {fontSize: 22, fontWeight: 'bold', color: 'white', marginBottom: 10}
+  text: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 15
+  }
 });
 
 export default function Title(props) {
