@@ -18,19 +18,6 @@ import Summary from './summary';
 import Leaderboard from './leaderboard';
 
 const { width } = Dimensions.get('window');
-const users = [{
-  name: 'Razvan Ludosanu',
-  color: '#007ACA',
-  level: 38,
-  date: '03/05/2019',
-  chrono: '08:24'
-}, {
-  name: 'Guillaume Beuriot',
-  color: '#007ACA',
-  level: 45,
-  date: '23/04/2019',
-  chrono: '06:43'
-}];
 
 const styles = StyleSheet.create({
   screen: {
@@ -95,7 +82,6 @@ export default connect(
           >
             <Text style={ styles.buttonText }>Start</Text>
           </TouchableOpacity>
-
           <ScrollView>
             <View style={ styles.container }>
               <WhatToKnow
@@ -106,9 +92,6 @@ export default connect(
                 rounds={ workout.rounds }
                 exercises={ exercises }
               />
-              {/*<Leaderboard
-                value={ users }
-              />*/}
             </View>
           </ScrollView>
         </View>

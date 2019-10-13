@@ -38,8 +38,6 @@ const styles = StyleSheet.create({
 const isLast = (limit, index, value) => limit === index ? 0 : value;
 
 export default function Summary({ rounds, exercises }) {
-  console.log('rounds', rounds);
-  console.log('exercises', exercises);
   return (
     <View style={styles.container}>
       <Title value={'Summary'} />

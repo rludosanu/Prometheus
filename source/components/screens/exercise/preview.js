@@ -12,13 +12,6 @@ import { connect } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
 
 const { width } = Dimensions.get('window');
-const users = [{
-  name: 'Razvan Ludosanu',
-  color: '#007ACA',
-  level: 38,
-  date: '03/05/2019',
-  chrono: '08:24'
-}];
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -91,36 +84,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     flexGrow: 1
-  },
-  leaderboardIcon: {
-    fontSize: 36,
-    color: '#007ACA',
-    marginRight: 10
-  },
-  leaderboardUser: {
-    flexGrow: 1
-  },
-  leaderboardUserName: {
-    color: 'white',
-    fontSize: 15,
-    fontWeight: 'bold',
-    marginBottom: 2
-  },
-  leaderboardUserLevel: {
-    color: '#7F7F7F',
-    fontSize: 13
-  },
-  leaderboardChrono: {
-    color: 'white',
-    fontSize: 15,
-    fontWeight: 'bold',
-    marginBottom: 2,
-    textAlign: 'right'
-  },
-  leaderboardDate: {
-    color: '#7F7F7F',
-    fontSize: 13,
-    textAlign: 'right'
   }
 });
 
@@ -173,25 +136,6 @@ export default connect(
                   <Image style={ styles.exerciseImage } source={{ uri: exercise.image }} />
                   <Text style={ styles.exerciseLabel }>0x { exercise.label }</Text>
                 </View>
-              </View>
-              <View style={ styles.section }>
-                <Text style={ styles.title }>Leaderboard</Text>
-                { users.map((user, index) => (
-                  <View
-                    key={ `user-${index}` }
-                    style={{ flexDirection: 'row', alignItems: 'center', marginBottom: users.length === index + 1 ? 0 : 15 }}
-                  >
-                    <Feather style={ styles.leaderboardIcon } name={ 'hexagon' } />
-                    <View style={ styles.leaderboardUser }>
-                      <Text style={ styles.leaderboardUserName }>{ user.name }</Text>
-                      <Text style={ styles.leaderboardUserLevel }>Level { user.level }</Text>
-                    </View>
-                    <View>
-                      <Text style={ styles.leaderboardChrono }>{ user.chrono }</Text>
-                      <Text style={ styles.leaderboardDate }>{ user.date }</Text>
-                    </View>
-                  </View>
-                )) }
               </View>
             </View>
           </ScrollView>
