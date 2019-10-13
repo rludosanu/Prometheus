@@ -9,7 +9,10 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
-import { getWorkoutMuscles } from './../../../helpers/workout';
+import {
+  getWorkoutMuscles,
+  getWorkoutDifficulty
+} from './../../../helpers/workout';
 
 const stylesColoredDots = StyleSheet.create({
   dot: {
@@ -100,7 +103,7 @@ function Workouts({ exercises, workouts, equipments, onPress }) {
             <Text style={ stylesWorkouts.name }>{ workouts[workoutId].label }</Text>
             <Text style={ stylesWorkouts.body }>{ getWorkoutMuscles(workouts[workoutId], exercises) }</Text>
             <View style={ stylesWorkouts.difficulty }>
-              <ColoredDots count={ 1 } />
+              <ColoredDots count={ getWorkoutDifficulty(workouts[workoutId], exercises, output = 'number') } />
               <Text style={ stylesWorkouts.label }>Difficulty</Text>
             </View>
             <View style={ stylesWorkouts.duration }>

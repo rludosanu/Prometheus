@@ -11,7 +11,8 @@ import {
 import { connect } from 'react-redux';
 import {
   getWorkoutVideos,
-  getWorkoutEquipment
+  getWorkoutEquipment,
+  getWorkoutDifficulty
 } from '../../../helpers/workout';
 import WhatToKnow from './what-to-know';
 import Summary from './summary';
@@ -87,6 +88,7 @@ export default connect(
               <WhatToKnow
                 videos={ getWorkoutVideos(workout, exercises) }
                 equipments={ getWorkoutEquipment(workout, exercises, equipments) }
+                difficulty={ getWorkoutDifficulty(workout, exercises, 'string') }
               />
               <Summary
                 rounds={ workout.rounds }

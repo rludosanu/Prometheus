@@ -57,7 +57,7 @@ function List({ items }) {
   );
 }
 
-export default function WhatToKnow({ videos, equipments }) {
+export default function WhatToKnow({ videos, equipments, difficulty }) {
   return (
     <View style={ styles.container }>
       <Title value={ 'What to know' } />
@@ -83,7 +83,7 @@ export default function WhatToKnow({ videos, equipments }) {
             value: equipments,
             icon: 'triangle'
           }, {
-            value: 'Intermediate',
+            value: difficulty,
             icon: 'hexagon'
           }]
         }

@@ -103,30 +103,30 @@ function CardCarouselRatings({ count }) {
   );
 }
 
-function CardCarouselItem(props) {
+function CardCarouselItem({ onPress, isFirst, isLast, label, description, difficulty, duration }) {
   return (
-    <TouchableWithoutFeedback onPress={ props.onPress }>
-      <View style={ [stylesCCI.container, { marginLeft: props.isFirst ? 20 : 10, marginRight: props.isLast ? 20 : 10 }] }>
+    <TouchableWithoutFeedback onPress={ onPress }>
+      <View style={ [stylesCCI.container, { marginLeft: isFirst ? 20 : 10, marginRight: isLast ? 20 : 10 }] }>
         <View style={ stylesCCI.body }>
           <Text style={ stylesCCI.label }>
-            { props.label }
+            { label }
           </Text>
           <Text style={ stylesCCI.description }>
-            { props.description }
+            { description }
           </Text>
         </View>
         <View style={ stylesCCI.footer }>
           <View style={ stylesCCI.footerTag }>
             <Text style={ stylesCCI.footerTagText }>
-              Level
+              Difficulty
             </Text>
-            <CardCarouselRatings count={ props.level } />
+            <CardCarouselRatings count={ difficulty } />
           </View>
           <View style={ stylesCCI.footerTag }>
             <Text style={ stylesCCI.footerTagText }>
               Duration
             </Text>
-            <CardCarouselRatings count={ props.duration } />
+            <CardCarouselRatings count={ duration } />
           </View>
         </View>
       </View>
@@ -134,37 +134,37 @@ function CardCarouselItem(props) {
   );
 }
 
-export default function CardCarousel(props) {
+export default function CardCarousel({ label, description, background, onPress, featured }) {
   return (
     <ImageBackground
-      source={{ uri: props.background }}
+      source={{ uri: background }}
       style={ stylesCC.background }
     >
       <View style={ stylesCC.body }>
         <Text style={ stylesCC.label }>
-          { props.label }
+          { label }
         </Text>
         <Text style={ stylesCC.description }>
-          { props.description }
+          { description }
         </Text>
       </View>
       <ScrollView horizontal={ true }>
-        { props.featured.map((item, index) => (
+        { featured.map((item, index) => (
           <CardCarouselItem
             key={ `featured-tile-${index}` }
             onPress={ item.onPress }
             isFirst={ index === 0 }
-            isLast={ index === props.featured.length - 1 }
+            isLast={ index === featured.length - 1 }
             label={ item.label }
             description={ item.description }
-            level={ item.level }
+            difficulty={ item.difficulty }
             duration={ item.duration }
           />
         )) }
       </ScrollView>
       <TouchableOpacity
         style={{ paddingLeft: 20, paddingRight: 20, marginTop: 10, marginBottom: 20, justifyContent: 'flex-end' }}
-        onPress={ props.onPress }
+        onPress={ onPress }
       >
         <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white', textAlign: 'right' }}>See All</Text>
       </TouchableOpacity>

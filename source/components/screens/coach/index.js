@@ -1,11 +1,18 @@
-import React, {Component} from 'react';
-import {ScrollView} from 'react-native';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import {
+  getWorkoutMuscles,
+  getWorkoutDifficulty
+} from '../../../helpers/workout';
 import Card from './card';
 import CardCarousel from './card-carousel';
 
 export default connect(
-  state => state,
+  state => ({
+    exercises: state.exercises,
+    workouts: state.workouts,
+  }),
   null
 )(
   class extends Component {
@@ -13,7 +20,13 @@ export default connect(
       header: null
     };
 
+    _goToWorkout(props) {
+      this.props.navigation.navigate('WorkoutPreview', props);
+    }
+
     render() {
+      const { exercises, workouts } = this.props;
+
       return (
         <ScrollView style={{ backgroundColor: 'white' }}>
           <CardCarousel
@@ -23,22 +36,22 @@ export default connect(
             onPress={ () => this.props.navigation.navigate('WorkoutsList') }
             featured={ [{
               label: 'Athena',
-              description: 'Core, Lower Body',
-              level: 1,
+              description: getWorkoutMuscles(workouts['athena'], exercises),
+              difficulty: getWorkoutDifficulty(workouts['athena'], exercises, 'number'),
               duration: 3,
-              onPress: () => this.props.navigation.navigate('WorkoutPreview', { id: 'ath', title: 'Athena' }),
+              onPress: () => this._goToWorkout({ id: 'athena', label: 'Athena' }),
+            }, {
+              label: 'Morpheus',
+              description: getWorkoutMuscles(workouts['morpheus'], exercises),
+              difficulty: getWorkoutDifficulty(workouts['morpheus'], exercises, 'number'),
+              duration: 1,
+              onPress: () => this._goToWorkout({ id: 'morpheus', label: 'Morpheus' }),
             }, {
               label: 'Prometheus',
-              description: 'Core, Upper body',
-              level: 2,
-              duration: 1,
-              onPress: () => this.props.navigation.navigate('WorkoutPreview', { id: 'pth', title: 'Prometheus' }),
-            }, {
-              label: 'Hyperion',
-              description: 'Core, Upper body',
-              level: 2,
+              description: getWorkoutMuscles(workouts['prometheus'], exercises),
+              difficulty: getWorkoutDifficulty(workouts['prometheus'], exercises, 'number'),
               duration: 3,
-              onPress: () => this.props.navigation.navigate('WorkoutPreview', { id: 'hyp', title: 'Hyperion' }),
+              onPress: () => this._goToWorkout({ id: 'prometheus', label: 'Prometheus' }),
             }] }
           />
           <Card

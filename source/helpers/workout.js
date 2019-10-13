@@ -54,3 +54,33 @@ export function getWorkoutMuscles(workout, exercises) {
 export function getWorkoutVideos(workout, exercises) {
   return getUniqueValues(getExercisesIds(workout), exercises, 'video');
 }
+
+export function getWorkoutDifficulty(workout, exercises, output = 'number') {
+  let count = 0;
+  let total = 0;
+  let difficulty = 1;
+  let round;
+  let exercise;
+
+  for (round of workout.rounds) {
+    for (exercise of round) {
+      count += 1;
+      if (exercise.id === 'rest') {
+        total -= exercise.volume * 0.3;
+      } else {
+        total += exercise.volume * exercises[exercise.id].score;
+      }
+    }
+  }
+  difficulty = total / count;
+  console.log(`[difficulty] ${workout.label} = ${difficulty}`);
+  if (difficulty < 3) {
+    return output === 'number' ? 1 : 'Beginner';
+  } else if (difficulty >= 3 && difficulty < 4) {
+    return output === 'number' ? 2 : 'Intermediate';
+  } else if (difficulty >= 4) {
+    return output === 'number' ? 3 : 'Advanced';
+  } else {
+    return output === 'number' ? 1 : 'Beginner';
+  }
+}
