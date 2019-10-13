@@ -17,13 +17,10 @@ export default connect(
 )(
   class extends Component {
     componentDidMount() {
-      console.log('[Loading] componentDidMount');
       this.props.autoLogIn();
     }
 
     componentDidUpdate(props) {
-      console.log('[Loading] componentDidUpdate');
-      console.log(this.props);
       if (!this.props.user.isLoading) {
         if (props.user.token !== this.props.user.token && this.props.user.token) {
           this.props.navigation.navigate('App');

@@ -43,12 +43,14 @@ export function getWorkoutEquipment(workout, exercises, equipments) {
     : 'No equipment';
 }
 
-export function getWorkoutMuscles(workout, exercises) {
-  let ids = getExercisesIds(workout);
+export function getWorkoutMuscles(workout, exercises, format = 'string') {
+  let results = getUniqueValues(getExercisesIds(workout), exercises, 'muscles');
 
-  return getUniqueValues(ids, exercises, 'muscles')
-    .map(muscle => muscle.charAt(0).toUpperCase() + muscle.slice(1))
-    .join(', ');
+  if (format === 'string') {
+    return results.map(muscle => muscle.charAt(0).toUpperCase() + muscle.slice(1)).join(', ');
+  } else {
+    return results;
+  }
 }
 
 export function getWorkoutVideos(workout, exercises) {
@@ -73,7 +75,6 @@ export function getWorkoutDifficulty(workout, exercises, output = 'number') {
     }
   }
   difficulty = total / count;
-  console.log(`[difficulty] ${workout.label} = ${difficulty}`);
   if (difficulty < 3) {
     return output === 'number' ? 1 : 'Beginner';
   } else if (difficulty >= 3 && difficulty < 4) {
@@ -83,4 +84,17 @@ export function getWorkoutDifficulty(workout, exercises, output = 'number') {
   } else {
     return output === 'number' ? 1 : 'Beginner';
   }
+}
+
+export function formatWorkoutsList(workouts, exercises, equipments) {
+  return Object.keys(workouts).reduce((list, workoutId) => {
+    list.push({
+      id: workoutId,
+      label: workouts[workoutId].label,
+      image: workouts[workoutId].image,
+      muscles: getWorkoutMuscles(workouts[workoutId], exercises, 'array'),
+      difficulty: getWorkoutDifficulty(workouts[workoutId], exercises, output = 'number')
+    });
+    return list;
+  }, []);
 }

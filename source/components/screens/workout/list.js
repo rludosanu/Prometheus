@@ -11,7 +11,8 @@ import { connect } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
 import {
   getWorkoutMuscles,
-  getWorkoutDifficulty
+  getWorkoutDifficulty,
+  formatWorkoutsList
 } from './../../../helpers/workout';
 
 const stylesColoredDots = StyleSheet.create({
@@ -86,24 +87,42 @@ const stylesWorkouts = StyleSheet.create({
   }
 });
 
-function Workouts({ exercises, workouts, equipments, onPress }) {
+function Workouts({ workouts, filters, onPress }) {
+  console.log('filters', filters);
+  console.log(`filters.length = ${filters.length}`);
   return (
     <ScrollView style={ stylesWorkouts.container }>
-      { Object.keys(workouts).map(workoutId => (
+      { workouts.filter(workout => {
+        let points = 0;
+
+        if (!filters || !filters.length) {
+          return true;
+        } else {
+          for (let filter of filters) {
+            if (filter.type === 'difficulty' && filter.value === workout.difficulty) {
+              points += 1;
+            } else if (filter.type === 'muscles' && workout.muscles.includes(filter.value)) {
+              points += 1;
+            }
+            console.log(`points = ${points}`);
+            return points === filters.length ? true : false;
+          }
+        }
+      }).map(workout => (
         <TouchableOpacity
-          key={ `workout-${workoutId}` }
-          onPress={ () => onPress({ id: workoutId, label: workouts[workoutId].label }) }
+          key={ `workout-${workout.id}` }
+          onPress={ () => onPress({ id: workout.id, label: workout.label }) }
           style={ stylesWorkouts.workout }
         >
           <Image
             style={ stylesWorkouts.image }
-            source={{ uri: workouts[workoutId].image }}
+            source={{ uri: workout.image }}
           />
           <View>
-            <Text style={ stylesWorkouts.name }>{ workouts[workoutId].label }</Text>
-            <Text style={ stylesWorkouts.body }>{ getWorkoutMuscles(workouts[workoutId], exercises) }</Text>
+            <Text style={ stylesWorkouts.name }>{ workout.label }</Text>
+            <Text style={ stylesWorkouts.body }>{ workout.muscles.map(muscle => muscle.charAt(0).toUpperCase() + muscle.slice(1)).join(', ') }</Text>
             <View style={ stylesWorkouts.difficulty }>
-              <ColoredDots count={ getWorkoutDifficulty(workouts[workoutId], exercises, output = 'number') } />
+              <ColoredDots count={ workout.difficulty } />
               <Text style={ stylesWorkouts.label }>Difficulty</Text>
             </View>
             <View style={ stylesWorkouts.duration }>
@@ -135,35 +154,57 @@ const stylesFilters = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 5,
     marginRight: 5
+  },
+  labelActive: {
+    color: 'white',
+    fontSize: 14,
+    borderWidth: 1,
+    borderColor: '#007ACA',
+    backgroundColor: '#007ACA',
+    borderRadius: 4,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 5,
+    marginRight: 5
   }
 });
 
-function Filters() {
+function isFilterActive(filters, filter) {
+  return filters.findIndex(item => item.type === filter.type && item.value === filter.value) !== -1 ? true : false;
+}
+
+function Filters({ activeFilters, onPress }) {
   const filters = [
-    { label: 'Beginner', value: 'Beginner', type: 'difficulty' },
-    { label: 'Intermediate', value: 'Intermediate', type: 'difficulty' },
-    { label: 'Advanced', value: 'Advanced', type: 'difficulty' },
-    { label: 'Short', value: 'Short', type: 'duration' },
-    { label: 'Medium', value: 'Medium', type: 'duration' },
-    { label: 'Long', value: 'Long', type: 'duration' },
-    { label: 'Full Body', value: 'Full Body', type: 'body' },
-    { label: 'Lower', value: 'Lower', type: 'body' },
-    { label: 'Core', value: 'Core', type: 'body' },
-    { label: 'Upper', value: 'Upper', type: 'equipment' },
-    { label: 'No Distances', value: 'No Distances', type: 'equipment' },
-    { label: 'No Equipment', value: 'No Equipment', type: 'equipment' },
+    { label: 'Beginner', value: 1, type: 'difficulty' },
+    { label: 'Intermediate', value: 2, type: 'difficulty' },
+    { label: 'Advanced', value: 3, type: 'difficulty' },
+    { label: 'Full Body', value: 'fullbody', type: 'muscles' },
+    { label: 'Lower', value: 'lower', type: 'muscles' },
+    { label: 'Core', value: 'core', type: 'muscles' },
+    { label: 'Upper', value: 'upper', type: 'muscles' },
+    // { label: 'Short', value: 'Short', type: 'duration' },
+    // { label: 'Medium', value: 'Medium', type: 'duration' },
+    // { label: 'Long', value: 'Long', type: 'duration' },
   ];
 
   return (
     <View style={ stylesFilters.container }>
       <ScrollView horizontal={ true }>
         { filters.map((filter, index) => (
-          <Text
+          <TouchableOpacity
             key={ `filter-${index}` }
-            style={ stylesFilters.label }
+            onPress={ () => onPress(filter) }
           >
-            { filter.label }
-          </Text>
+            <Text
+              style={ isFilterActive(activeFilters, filter) ? stylesFilters.labelActive : stylesFilters.label }
+            >
+              { filter.label }
+            </Text>
+          </TouchableOpacity>
         )) }
       </ScrollView>
     </View>
@@ -189,16 +230,42 @@ export default connect(
       };
     };
 
+    constructor(props) {
+      super(props);
+      this.state = {
+        filters: []
+      };
+    }
+
+    componentDidUpdate() {
+      this.state.filters.map(filter => console.log(filter));
+    }
+
+    _updateFilters = (filter) => {
+      let { filters } = this.state;
+      let index = filters.findIndex(item => item.type == filter.type && item.value === filter.value);
+
+      if (index === -1) {
+        filters.push(filter);
+      } else {
+        filters.splice(index, 1);
+      }
+      this.setState({ filters });
+    }
+
     render() {
+      const { filters } = this.state;
       const { exercises, workouts, equipments } = this.props;
 
       return (
         <View style={{ flex: 1 }}>
-          <Filters />
+          <Filters
+            activeFilters={ this.state.filters }
+            onPress={ this._updateFilters }
+          />
           <Workouts
-            exercises={ exercises }
-            workouts={ workouts }
-            equipments={ equipments }
+            workouts={ formatWorkoutsList(workouts, exercises, equipments) }
+            filters={ filters }
             onPress={ (props) => this.props.navigation.navigate('WorkoutPreview', props) }
           />
         </View>
