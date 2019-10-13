@@ -7,7 +7,9 @@ import {
   StyleSheet,
   TouchableOpacity
 } from 'react-native';
+import { connect } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
+import { getWorkoutMuscles } from './../../../helpers/workout';
 
 const stylesColoredDots = StyleSheet.create({
   dot: {
@@ -81,35 +83,35 @@ const stylesWorkouts = StyleSheet.create({
   }
 });
 
-function Workouts({ values }) {
+function Workouts({ exercises, workouts, equipments, onPress }) {
   return (
     <ScrollView style={ stylesWorkouts.container }>
-      { values.map((value, index) => (
+      { Object.keys(workouts).map(workoutId => (
         <TouchableOpacity
-          key={ `workout-${index}` }
-          onPress={ value.onPress }
+          key={ `workout-${workoutId}` }
+          onPress={ () => onPress({ id: workoutId, label: workouts[workoutId].label }) }
           style={ stylesWorkouts.workout }
         >
           <Image
             style={ stylesWorkouts.image }
-            source={{ uri: value.image }}
+            source={{ uri: workouts[workoutId].image }}
           />
           <View>
-            <Text style={ stylesWorkouts.name }>{ value.name }</Text>
-            <Text style={ stylesWorkouts.body }>{ value.body }</Text>
+            <Text style={ stylesWorkouts.name }>{ workouts[workoutId].label }</Text>
+            <Text style={ stylesWorkouts.body }>{ getWorkoutMuscles(workouts[workoutId], exercises) }</Text>
             <View style={ stylesWorkouts.difficulty }>
-              <ColoredDots count={ value.difficulty } />
+              <ColoredDots count={ 1 } />
               <Text style={ stylesWorkouts.label }>Difficulty</Text>
             </View>
             <View style={ stylesWorkouts.duration }>
-              <ColoredDots count={ value.duration } />
+              <ColoredDots count={ 1 } />
               <Text style={ stylesWorkouts.label }>Duration</Text>
             </View>
           </View>
         </TouchableOpacity>
       )) }
     </ScrollView>
-  )
+  );
 }
 
 const stylesFilters = StyleSheet.create({
@@ -133,16 +135,31 @@ const stylesFilters = StyleSheet.create({
   }
 });
 
-function Filters({ values }) {
+function Filters() {
+  const filters = [
+    { label: 'Beginner', value: 'Beginner', type: 'difficulty' },
+    { label: 'Intermediate', value: 'Intermediate', type: 'difficulty' },
+    { label: 'Advanced', value: 'Advanced', type: 'difficulty' },
+    { label: 'Short', value: 'Short', type: 'duration' },
+    { label: 'Medium', value: 'Medium', type: 'duration' },
+    { label: 'Long', value: 'Long', type: 'duration' },
+    { label: 'Full Body', value: 'Full Body', type: 'body' },
+    { label: 'Lower', value: 'Lower', type: 'body' },
+    { label: 'Core', value: 'Core', type: 'body' },
+    { label: 'Upper', value: 'Upper', type: 'equipment' },
+    { label: 'No Distances', value: 'No Distances', type: 'equipment' },
+    { label: 'No Equipment', value: 'No Equipment', type: 'equipment' },
+  ];
+
   return (
     <View style={ stylesFilters.container }>
       <ScrollView horizontal={ true }>
-        { values.map((value, index) => (
+        { filters.map((filter, index) => (
           <Text
             key={ `filter-${index}` }
             style={ stylesFilters.label }
           >
-            { value.label }
+            { filter.label }
           </Text>
         )) }
       </ScrollView>
@@ -150,92 +167,39 @@ function Filters({ values }) {
   );
 }
 
-export default class WorkoutsListScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'Workouts',
-      headerStyle: {
-        backgroundColor: '#222222'
-      },
-      headerTintColor: 'white'
+export default connect(
+  state => ({
+    exercises: state.exercises,
+    workouts: state.workouts,
+    equipments: state.equipments
+  }),
+  null
+)(
+  class WorkoutsListScreen extends React.Component {
+    static navigationOptions = ({ navigation }) => {
+      return {
+        title: 'Workouts',
+        headerStyle: {
+          backgroundColor: '#222222'
+        },
+        headerTintColor: 'white'
+      };
     };
-  };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      filter: [],
-    };
+    render() {
+      const { exercises, workouts, equipments } = this.props;
+
+      return (
+        <View style={{ flex: 1 }}>
+          <Filters />
+          <Workouts
+            exercises={ exercises }
+            workouts={ workouts }
+            equipments={ equipments }
+            onPress={ (props) => this.props.navigation.navigate('WorkoutPreview', props) }
+          />
+        </View>
+      );
+    }
   }
-
-  render() {
-    const filters = [
-      { label: 'Beginner', value: 'Beginner', type: 'difficulty' },
-      { label: 'Intermediate', value: 'Intermediate', type: 'difficulty' },
-      { label: 'Advanced', value: 'Advanced', type: 'difficulty' },
-      { label: 'Short', value: 'Short', type: 'duration' },
-      { label: 'Medium', value: 'Medium', type: 'duration' },
-      { label: 'Long', value: 'Long', type: 'duration' },
-      { label: 'Full Body', value: 'Full Body', type: 'body' },
-      { label: 'Lower', value: 'Lower', type: 'body' },
-      { label: 'Core', value: 'Core', type: 'body' },
-      { label: 'Upper', value: 'Upper', type: 'equipment' },
-      { label: 'No Distances', value: 'No Distances', type: 'equipment' },
-      { label: 'No Equipment', value: 'No Equipment', type: 'equipment' },
-    ];
-    const workouts = [{
-      name: 'Achilles',
-      body: 'Full Body',
-      image: 'https://images.pexels.com/photos/2294354/pexels-photo-2294354.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-      difficulty: 2,
-      duration: 2,
-      onPress: () => this.props.navigation.navigate('WorkoutPreview', { title: 'Achilles' }),
-    }, {
-      name: 'Adonis',
-      body: 'Lower, Core',
-      image: 'https://images.pexels.com/photos/2294355/pexels-photo-2294355.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-      difficulty: 1,
-      duration: 1,
-      onPress: () => this.props.navigation.navigate('WorkoutPreview', { title: 'Adonis' }),
-    }, {
-      name: 'Agon',
-      body: 'Lower',
-      image: 'https://images.pexels.com/photos/2294353/pexels-photo-2294353.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-      difficulty: 3,
-      duration: 1,
-      onPress: () => this.props.navigation.navigate('WorkoutPreview', { title: 'Agon' }),
-    }, {
-      name: 'Achilles',
-      body: 'Full Body',
-      image: 'https://images.pexels.com/photos/2294354/pexels-photo-2294354.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-      difficulty: 2,
-      duration: 2,
-      onPress: () => this.props.navigation.navigate('WorkoutPreview', { title: 'Achilles' }),
-    }, {
-      name: 'Adonis',
-      body: 'Lower, Core',
-      image: 'https://images.pexels.com/photos/2294355/pexels-photo-2294355.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-      difficulty: 1,
-      duration: 1,
-      onPress: () => this.props.navigation.navigate('WorkoutPreview', { title: 'Adonis' }),
-    }, {
-      name: 'Agon',
-      body: 'Lower',
-      image: 'https://images.pexels.com/photos/2294353/pexels-photo-2294353.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-      difficulty: 3,
-      duration: 1,
-      onPress: () => this.props.navigation.navigate('WorkoutPreview', { title: 'Agon' }),
-    }];
-
-    return (
-      <View style={{ flex: 1 }}>
-        <Filters
-          values={ filters }
-        />
-        <Workouts
-          values={ workouts }
-        />
-      </View>
-    );
-  }
-}
+);

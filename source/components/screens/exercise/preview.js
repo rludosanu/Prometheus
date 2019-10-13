@@ -145,7 +145,7 @@ export default connect(
     render() {
       const exerciseId = this.props.navigation.getParam('id', null);
       const exercise = this.props.exercises[exerciseId];
-      const equipments = exercise.equipment.length > 0 ? exercise.equipment.map(id => this.props.equipments[id].label).join(', ') : 'No equipment';
+      const equipments = exercise.equipments.length > 0 ? exercise.equipments.map(id => this.props.equipments[id].label).join(', ') : 'No equipment';
       const muscles = exercise.muscles.map(muscle => muscle.charAt(0).toUpperCase() + muscle.slice(1)).join(', ');
 
       return (

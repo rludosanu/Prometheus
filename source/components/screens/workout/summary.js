@@ -37,31 +37,31 @@ const styles = StyleSheet.create({
 
 const isLast = (limit, index, value) => limit === index ? 0 : value;
 
-export default function Summary(props) {
+export default function Summary({ rounds, exercises }) {
+  console.log('rounds', rounds);
+  console.log('exercises', exercises);
   return (
     <View style={styles.container}>
-      <Title
-        value={'Summary'}
-      />
-      { props.value.map((round, indexA) => (
+      <Title value={'Summary'} />
+      { rounds.map((round, indexA) => (
         <View
           key={ `round-${indexA}` }
-          style={{ marginBottom: isLast(props.value.length, indexA + 1, 10) }}
+          style={{ marginBottom: isLast(rounds.length, indexA + 1, 10) }}
         >
           <Text style={ styles.roundTitle }>
-            Round { indexA + 1 }/{ props.value.length }
+            Round { indexA + 1 }/{ rounds.length }
           </Text>
           { round.map((exercise, indexB) => (
             <View
-              key={ `exercise-${indexB}` }
+              key={ `exercise-${exercise.id}` }
               style={ [styles.row, { marginBottom: isLast(round.length, indexB + 1, 15) }] }
             >
               <Image
                 style={ styles.image }
-                source={{ uri: exercise.uri }}
+                source={{ uri: exercises[exercise.id].image }}
               />
               <Text style={ styles.exercise }>
-                { exercise.volume }x { exercise.exercise }
+                { exercise.volume }{exercise.id === 'rest' ? 's' : 'x'} { exercises[exercise.id].label }
               </Text>
             </View>
           ))}
