@@ -7,95 +7,84 @@ import {
   StyleSheet,
   TouchableOpacity
 } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import { connect } from 'react-redux';
 
-const stylesWorkouts = StyleSheet.create({
-  container: {
+const styles = StyleSheet.create({
+  screen: {
     backgroundColor: '#161616'
   },
-  workout: {
+  list: {
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  item: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#222222'
   },
   image: {
-    width: 90,
-    height: 90,
+    width: 55,
+    height: 55,
     borderRadius: 4,
     marginRight: 15
   },
-  name: {
-    fontSize: 22,
+  label: {
+    fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
-    textTransform: 'uppercase',
-    fontStyle: 'italic'
-  },
-  body: {
-    fontSize: 14,
-    color: '#A9A8A6'
-  },
-  difficulty: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 5
-  },
-  duration: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  label: {
-    fontSize: 12,
-    color: '#A9A8A6',
-    marginLeft: 4
+    flexGrow: 1
   }
 });
 
-export default class extends Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'Exercises',
-      headerStyle: {
-        backgroundColor: '#222222'
-      },
-      headerTintColor: 'white'
+export default connect(
+  state => ({
+    exercises: state.exercises
+  }),
+  null
+)(
+  class extends Component {
+    static navigationOptions = ({ navigation }) => {
+      return {
+        title: 'Exercises',
+        headerStyle: {
+          backgroundColor: '#222222'
+        },
+        headerTintColor: 'white'
+      };
     };
-  };
 
-  render() {
-    const exercises = [{
-      label: 'Archer Pullups',
-      image: 'https://images.pexels.com/photos/2294354/pexels-photo-2294354.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-    }, {
-      label: 'Arm & Leg Lifts Left',
-      image: 'https://images.pexels.com/photos/2294355/pexels-photo-2294355.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-    }, {
-      label: 'Assisted Lunges',
-      image: 'https://images.pexels.com/photos/2294353/pexels-photo-2294353.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-    }];
+    render() {
+      const {
+        navigation,
+        exercises
+      } = this.props;
 
-    return (
-      <ScrollView style={{ backgroundColor: '#161616' }}>
-        <View style={{ paddingTop: 10, paddingBottom: 10 }}>
-          { exercises.map((exercise, index) => (
-            <TouchableOpacity
-              key={ `exercise-${index}` }
-              onPress={ () => this.props.navigation.navigate('ExercisePreview', { title: exercise.label }) }
-              style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: 20, paddingRight: 20, paddingTop: 10, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#222222' }}
-            >
-              <Image
-                style={{ width: 55, height: 55, borderRadius: 4, marginRight: 15 }}
-                source={{ uri: exercise.image }}
-              />
-              <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white', flexGrow: 1 }}>
-                { exercise.label }
-              </Text>
-            </TouchableOpacity>
-          )) }
-        </View>
-      </ScrollView>
-    );
+      return (
+        <ScrollView style={ styles.screen }>
+          <View style={ styles.list }>
+            { Object.keys(exercises || {}).map(exerciseId => (
+              <TouchableOpacity
+                key={ `exercise-${exerciseId}` }
+                onPress={ () => navigation.navigate('ExercisePreview', { id: exerciseId, label: exercises[exerciseId].label }) }
+                style={ styles.item }
+              >
+                <Image
+                  style={ styles.image }
+                  source={{ uri: exercises[exerciseId].image }}
+                />
+                <Text style={ styles.label }>
+                  { exercises[exerciseId].label }
+                </Text>
+              </TouchableOpacity>
+            )) }
+          </View>
+        </ScrollView>
+      );
+    }
   }
-}
+);
