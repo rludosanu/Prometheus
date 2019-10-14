@@ -115,6 +115,7 @@ function Picker({ title, value, items, onPress }) {
       <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black', marginBottom: 10 }}>{ title }</Text>
       { items.map((item, index) => (
         <TouchableOpacity
+          key={ `picker-${index}` }
           onPress={ () => onPress(item.value) }
           style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}
         >
@@ -157,16 +158,20 @@ export default connect(
       const exercise = this.props.exercises[exerciseId];
       const equipments = exercise.equipments.length > 0 ? exercise.equipments.map(id => this.props.equipments[id].label).join(', ') : 'No equipment';
       const muscles = exercise.muscles.map(muscle => muscle.charAt(0).toUpperCase() + muscle.slice(1)).join(', ');
+      const { showPicker, volume } = this.state;
 
       return (
         <View style={ styles.screen }>
-          <TouchableOpacity style={ styles.button } onPress={ () => {} }>
+          <TouchableOpacity
+            onPress={ () => this.props.navigation.navigate('ExercisePractice', { id: exerciseId, label: exercise.label, volume: volume }) }
+            style={ styles.button }
+          >
             <Text style={ styles.buttonText }>Start</Text>
           </TouchableOpacity>
-          { this.state.showPicker && (
+          { showPicker && (
             <Picker
               title={ 'Volume' }
-              value={ this.state.volume }
+              value={ volume }
               items={
                 [
                   { label: '10', value: 10 },

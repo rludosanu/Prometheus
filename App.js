@@ -22,6 +22,9 @@ import WorkoutsListScreen from './source/components/screens/workout/list';
 import WorkoutPreviewScreen from './source/components/screens/workout/preview';
 import ExercisesListScreen from './source/components/screens/exercise/list';
 import ExercisePreviewScreen from './source/components/screens/exercise/preview';
+import ExercisePracticeScreen from './source/components/screens/exercise/practice';
+import ExerciseFeedbackScreen from './source/components/screens/exercise/feedback';
+import ExerciseSummaryScreen from './source/components/screens/exercise/summary';
 
 const AppContainer = createAppContainer(
   createSwitchNavigator({
@@ -69,6 +72,26 @@ const AppContainer = createAppContainer(
           ExercisePreview: {
             screen: ExercisePreviewScreen
           },
+          ExercisePractice: {
+            screen: ExercisePracticeScreen
+          },
+          ExerciseFeedback: {
+            screen: ExerciseFeedbackScreen
+          },
+          ExerciseSummary: {
+            screen: ExerciseSummaryScreen
+          },
+        }, {
+          navigationOptions: ({ navigation }) => {
+            if (navigation.state.index > 0) {
+              return {
+                tabBarVisible: false
+              }
+            }
+            return {
+              tabBarVisible: true
+            };
+          }
         }),
         navigationOptions: () => ({
           tabBarIcon: ({ tintColor }) => (
