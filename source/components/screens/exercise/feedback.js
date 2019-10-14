@@ -4,33 +4,41 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Alert
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Slider from '@react-native-community/slider';
+import Feather from 'react-native-vector-icons/Feather';
+import SubmitButton from '../../uikit/submit-button';
 
 const { width, height } = Dimensions.get('window');
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: '#007ACA',
-    borderRadius: 4,
-    padding: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: width - 20
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold'
-  },
-});
-const FEEDBACKS = {
-  'NOT_GREAT': `Not great ! I couldn't perform any repetitions with correct technique`,
-  'OK': `OK ! I couldn't perform all repetitions with correct technique`,
-  'GREAT': `Great ! I needed breaks but completed all repetitions with correct technique`,
-  'EXCELLENT': `Excellent ! I didn't need extra breaks and could perform all repetitions with correct technique`,
-};
+
+function pickFeedback(score) {
+  if (score < 2.5) {
+    return `Not great - I couldn't perform any repetitions with correct technique`;
+  } else if (score >= 2.5 && score < 5) {
+    return `OK - I couldn't perform all repetitions with correct technique`;
+  } else if (score >= 5 && score < 7.5) {
+    return `Great - I needed breaks but completed all repetitions with correct technique`;
+  } else if (score > 7.5) {
+    return `Excellent - I didn't need extra breaks and could perform all repetitions with correct technique`;
+  }
+}
+
+function GoBackButton({ onGoBack }) {
+  return (
+    <TouchableOpacity
+      onPress={ onGoBack }
+      style={{ position: 'absolute', zIndex: 999, top: 20, left: 20 }}
+    >
+      <Feather
+        name={ 'x' }
+        style={{ fontSize: 24, color: 'white' }}
+       />
+    </TouchableOpacity>
+  );
+}
 
 export default connect(
   state => ({
@@ -51,52 +59,61 @@ export default connect(
       };
     }
 
-    _feedback = () => {
-      this.props.navigation.navigate('ExerciseSummary', {
-        ...this.props.navigation.state.params,
-        ...this.state
-      });
+    _giveUpExercise = () => {
+      Alert.alert(
+        'Giving up is not an option',
+        'Are you sure you want to cancel this session ?',
+        [
+          {
+            text: 'No',
+            onPress: () => {},
+          },
+          {
+            text: 'Yes',
+            onPress: () => this.props.navigation.navigate('ExercisesList')
+          },
+        ],
+      );
+    }
+
+    _saveFeedback = () => {
+      // Send event to redux-saga
+      // ...this.props.navigation.state.params,
+      // ...this.state
+
+      // Redirect to ExerciseList
+      this.props.navigation.navigate('Home');
     }
 
     render() {
-      const { technique } = this.state;
-      let feedback;
-
-      if (technique < 25) {
-        feedback = FEEDBACKS.NOT_GREAT;
-      } else if (technique >= 25 && technique < 50) {
-        feedback = FEEDBACKS.OK;
-      } else if (technique >= 50 && technique < 75) {
-        feedback = FEEDBACKS.GREAT;
-      } else if (technique > 75) {
-        feedback = FEEDBACKS.EXCELLENT;
-      }
       return (
-        <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#161616', padding: 20 }}>
-          <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>
-            How was your technique ?
-          </Text>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={{ fontSize: 15, color: 'white', textAlign: 'center' }}>
-              { feedback }
-            </Text>
-            <Slider
-              style={{ width: 400, height: 60 }}
-              minimumValue={ 0 }
-              maximumValue={ 100 }
-              minimumTrackTintColor={ '#007ACA' }
-              maximumTrackTintColor={ '#FFFFFF' }
-              onSlidingComplete={ (value) => this.setState({ technique: value }) }
+        <View style={{ flex: 1 }}>
+          <GoBackButton
+            onGoBack={ this._giveUpExercise }
+          />
+          <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#161616' }}>
+            <View style={{ flexGrow: 1, padding: 20, alignItems: 'center', justifyContent: 'center' }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', color: 'white', textTransform: 'uppercase', marginBottom: 60 }}>
+                How was your technique ?
+              </Text>
+              <Text style={{ fontSize: 15, color: 'white', textAlign: 'center' }}>
+                { pickFeedback(this.state.technique) }
+              </Text>
+              <Slider
+                style={{ width: width - 40, height: 100 }}
+                minimumValue={ 0 }
+                maximumValue={ 10 }
+                minimumTrackTintColor={ '#007ACA' }
+                maximumTrackTintColor={ 'white' }
+                thumbTintColor={ 'white' }
+                onSlidingComplete={ (value) => this.setState({ technique: value }) }
+              />
+            </View>
+            <SubmitButton
+              text={ 'Save Feedback' }
+              onPress={ this._saveFeedback }
             />
           </View>
-          <TouchableOpacity
-            onPress={ this._feedback }
-            style={ styles.button }
-          >
-            <Text style={ styles.buttonText }>
-              Continue
-            </Text>
-          </TouchableOpacity>
         </View>
       );
     }

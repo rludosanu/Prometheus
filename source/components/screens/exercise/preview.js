@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component } from 'react';
 import {
   ScrollView,
   View,
@@ -112,15 +112,22 @@ const styles = StyleSheet.create({
 function Picker({ title, value, items, onPress }) {
   return (
     <View style={ styles.picker }>
-      <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black', marginBottom: 10 }}>{ title }</Text>
+      <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black', marginBottom: 10 }}>
+        { title }
+      </Text>
       { items.map((item, index) => (
         <TouchableOpacity
           key={ `picker-${index}` }
           onPress={ () => onPress(item.value) }
           style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}
         >
-          <Feather style={{ fontSize: 16, color: 'black', marginRight: 15 }} name={ value === item.value ? 'check-circle' : 'circle' } />
-          <Text style={{ fontSize: 16, color: 'black' }}>{ item.label }</Text>
+          <Feather
+            style={{ fontSize: 16, color: 'black', marginRight: 15 }}
+            name={ value === item.value ? 'check-circle' : 'circle' }
+          />
+          <Text style={{ fontSize: 16, color: 'black' }}>
+            { item.label }
+          </Text>
         </TouchableOpacity>
       )) }
     </View>
@@ -163,10 +170,18 @@ export default connect(
       return (
         <View style={ styles.screen }>
           <TouchableOpacity
-            onPress={ () => this.props.navigation.navigate('ExercisePractice', { id: exerciseId, label: exercise.label, volume: volume }) }
+            onPress={
+              () => this.props.navigation.navigate('ExercisePractice', {
+                id: exerciseId,
+                label: exercise.label,
+                volume: volume
+              })
+            }
             style={ styles.button }
           >
-            <Text style={ styles.buttonText }>Start</Text>
+            <Text style={ styles.buttonText }>
+              Start
+            </Text>
           </TouchableOpacity>
           { showPicker && (
             <Picker
@@ -183,39 +198,76 @@ export default connect(
                   { label: '1000', value: 1000 },
                 ]
               }
-              onPress={ (value) => this.setState({ volume: value, showPicker: false }) }
+              onPress={
+                value => this.setState({
+                  volume: value,
+                  showPicker: false
+                })
+              }
             />
           ) }
           <ScrollView>
             <View style={ styles.container }>
               <View style={ styles.section }>
-                <Text style={ styles.title }>What to know</Text>
-                <Image style={ styles.aboutVideo } source={{ uri: exercise.image }} />
+                <Text style={ styles.title }>
+                  What to know
+                </Text>
+                <Image
+                  style={ styles.aboutVideo }
+                  source={{ uri: exercise.image }}
+                />
                 <View style={ [styles.aboutListItem, { marginBottom: 10 }] }>
-                  <Feather style={ styles.aboutListIcon } name={ 'triangle' } />
-                  <Text style={ styles.aboutListText }>{ equipments }</Text>
+                  <Feather
+                    name={ 'triangle' }
+                    style={ styles.aboutListIcon }
+                  />
+                  <Text style={ styles.aboutListText }>
+                    { equipments }
+                  </Text>
                 </View>
                 <View style={ [styles.aboutListItem, { marginBottom: 10 }] }>
-                  <Feather style={ styles.aboutListIcon } name={ 'hexagon' } />
-                  <Text style={ styles.aboutListText }>{ muscles }</Text>
+                  <Feather
+                    name={ 'hexagon' }
+                    style={ styles.aboutListIcon }
+                  />
+                  <Text style={ styles.aboutListText }>
+                    { muscles }
+                  </Text>
                 </View>
                 <View style={ styles.aboutListItem }>
-                  <Feather style={ styles.aboutListIcon } name={ 'square' } />
-                  <Text style={ styles.aboutListText }>Volume</Text>
+                  <Feather
+                    name={ 'square' }
+                    style={ styles.aboutListIcon }
+                  />
+                  <Text style={ styles.aboutListText }>
+                    Volume
+                  </Text>
                   <TouchableOpacity
                     onPress={ () => this.setState({ showPicker: true }) }
                     style={{ flexDirection: 'row', alignItems: 'center' }}
                   >
-                    <Text style={ styles.aboutListVolumeText }>{ this.state.volume }</Text>
-                    <Feather style={ styles.aboutListVolumeIcon } name={ 'chevron-down' } />
+                    <Text style={ styles.aboutListVolumeText }>
+                      { this.state.volume }
+                    </Text>
+                    <Feather
+                      name={ 'chevron-down' }
+                      style={ styles.aboutListVolumeIcon }
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
               <View style={ styles.section }>
-                <Text style={ styles.title }>Summary</Text>
+                <Text style={ styles.title }>
+                  Summary
+                </Text>
                 <View style={ styles.exercise }>
-                  <Image style={ styles.exerciseImage } source={{ uri: exercise.image }} />
-                  <Text style={ styles.exerciseLabel }>{ this.state.volume }x { exercise.label }</Text>
+                  <Image
+                    source={{ uri: exercise.image }}
+                    style={ styles.exerciseImage }
+                  />
+                  <Text style={ styles.exerciseLabel }>
+                    { this.state.volume }x { exercise.label }
+                  </Text>
                 </View>
               </View>
             </View>
