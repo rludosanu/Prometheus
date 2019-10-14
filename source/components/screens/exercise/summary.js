@@ -39,18 +39,11 @@ export default connect(
   null
 )(
   class extends Component {
-    static navigationOptions = ({ navigation }) => {
-      return {
-        title: 'Summary',
-        headerStyle: {
-          backgroundColor: '#222222'
-        },
-        headerTintColor: 'white'
-      };
+    static navigationOptions = {
+      header: null
     };
 
     render() {
-      console.log(this.props.navigation.state.params);
       return (
         <View style={ styles.screen }>
           <Text style={ styles.title }>Exercise Digest</Text>
@@ -59,7 +52,7 @@ export default connect(
             style={ styles.button }
           >
             <Text style={ styles.buttonText }>
-              Go to exercises
+              Save
             </Text>
           </TouchableOpacity>
         </View>
