@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, {Component} from 'react';
 import {
   ScrollView,
   View,
@@ -7,7 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 const styles = StyleSheet.create({
   screen: {
@@ -48,7 +48,7 @@ export default connect(
   null
 )(
   class extends Component {
-    static navigationOptions = ({ navigation }) => {
+    static navigationOptions = ({navigation}) => {
       return {
         title: 'Exercises',
         headerStyle: {
@@ -59,26 +59,23 @@ export default connect(
     };
 
     render() {
-      const {
-        navigation,
-        exercises
-      } = this.props;
+      const {navigation, exercises} = this.props;
 
       return (
-        <ScrollView style={ styles.screen }>
-          <View style={ styles.list }>
+        <ScrollView style={styles.screen}>
+          <View style={styles.list}>
             { Object.keys(exercises || {}).filter(exerciseId => exerciseId !== 'rest').map(exerciseId => (
               <TouchableOpacity
-                key={ `exercise-${exerciseId}` }
-                onPress={ () => navigation.navigate('ExercisePreview', { id: exerciseId, label: exercises[exerciseId].label }) }
-                style={ styles.item }
+                key={`exercise-${exerciseId}`}
+                onPress={() => navigation.navigate('ExercisePreview', { id: exerciseId, label: exercises[exerciseId].label})}
+                style={styles.item}
               >
                 <Image
-                  style={ styles.image }
-                  source={{ uri: exercises[exerciseId].image }}
+                  style={styles.image}
+                  source={{uri: exercises[exerciseId].image}}
                 />
-                <Text style={ styles.label }>
-                  { exercises[exerciseId].label }
+                <Text style={styles.label}>
+                  {exercises[exerciseId].label}
                 </Text>
               </TouchableOpacity>
             )) }
