@@ -1,3 +1,6 @@
+/**
+ * Returns the list of each unique exercises IDs in a workout.
+ */
 function getExercisesIds(workout) {
   return workout.rounds.reduce((list, round) => {
     let exercise;
@@ -34,6 +37,15 @@ function getUniqueValues(ids, data, key) {
   }, []);
 }
 
+/**
+ * Gets a workout's equipment
+ *
+ * @param {Object} workout | A workout
+ * @param {Object} exercises | A list of exercises
+ * @param {Object} equipments | A list of equipments
+ *
+ * @returns {String} The concatenated list of equipments
+ */
 export function getWorkoutEquipment(workout, exercises, equipments) {
   let ids = getExercisesIds(workout);
   let values = getUniqueValues(ids, exercises, 'equipment');
@@ -43,6 +55,16 @@ export function getWorkoutEquipment(workout, exercises, equipments) {
     : 'No equipment';
 }
 
+/**
+ * Gets a workout's muscles
+ *
+ * @param {Object} workout | A workout
+ * @param {Object} exercises | A list of exercises
+ * @param {String} format | The output format
+ *
+ * @returns {String} The concatenated list of muscles
+ * @returns {Array} The list of muscles
+ */
 export function getWorkoutMuscles(workout, exercises, format = 'string') {
   let results = getUniqueValues(getExercisesIds(workout), exercises, 'muscles');
 
@@ -99,6 +121,6 @@ export function formatWorkoutsList(workouts, exercises, equipments) {
   }, []);
 }
 
-export function formatWorkoutMuscles(mucles) {
+export function formatWorkoutMuscles(muscles) {
   return (muscles || []).map(muscle => muscle.charAt(0).toUpperCase() + muscle.slice(1)).join(', ');
 }

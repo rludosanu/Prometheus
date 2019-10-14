@@ -67,7 +67,7 @@ export default connect(
       return (
         <ScrollView style={ styles.screen }>
           <View style={ styles.list }>
-            { Object.keys(exercises || {}).map(exerciseId => (
+            { Object.keys(exercises || {}).filter(exerciseId => exerciseId !== 'rest').map(exerciseId => (
               <TouchableOpacity
                 key={ `exercise-${exerciseId}` }
                 onPress={ () => navigation.navigate('ExercisePreview', { id: exerciseId, label: exercises[exerciseId].label }) }

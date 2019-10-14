@@ -6,12 +6,12 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -34,6 +34,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 15,
     fontWeight: 'bold'
+  },
+  picker: {
+    backgroundColor: 'white',
+    borderRadius: 4,
+    padding: 20,
+    position: 'absolute',
+    zIndex: 999,
+    top: 40,
+    left: 40,
+    width: width - 80,
+    height: height - 220
   },
   container: {
     paddingTop: 10,
@@ -67,6 +78,17 @@ const styles = StyleSheet.create({
   },
   aboutListText: {
     fontSize: 15,
+    color: 'white',
+    flexGrow: 1
+  },
+  aboutListVolumeText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: 'white',
+    marginRight: 5,
+  },
+  aboutListVolumeIcon: {
+    fontSize: 15,
     color: 'white'
   },
   exercise: {
@@ -87,6 +109,23 @@ const styles = StyleSheet.create({
   }
 });
 
+function Picker({ title, value, items, onPress }) {
+  return (
+    <View style={ styles.picker }>
+      <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black', marginBottom: 10 }}>{ title }</Text>
+      { items.map((item, index) => (
+        <TouchableOpacity
+          onPress={ () => onPress(item.value) }
+          style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}
+        >
+          <Feather style={{ fontSize: 16, color: 'black', marginRight: 15 }} name={ value === item.value ? 'check-circle' : 'circle' } />
+          <Text style={{ fontSize: 16, color: 'black' }}>{ item.label }</Text>
+        </TouchableOpacity>
+      )) }
+    </View>
+  )
+}
+
 export default connect(
   state => ({
     exercises: state.exercises,
@@ -105,6 +144,14 @@ export default connect(
       };
     };
 
+    constructor(props) {
+      super(props);
+      this.state = {
+        showPicker: false,
+        volume: 25
+      };
+    }
+
     render() {
       const exerciseId = this.props.navigation.getParam('id', null);
       const exercise = this.props.exercises[exerciseId];
@@ -116,6 +163,24 @@ export default connect(
           <TouchableOpacity style={ styles.button } onPress={ () => {} }>
             <Text style={ styles.buttonText }>Start</Text>
           </TouchableOpacity>
+          { this.state.showPicker && (
+            <Picker
+              title={ 'Volume' }
+              value={ this.state.volume }
+              items={
+                [
+                  { label: '10', value: 10 },
+                  { label: '25', value: 25 },
+                  { label: '50', value: 50 },
+                  { label: '100', value: 100 },
+                  { label: '250', value: 250 },
+                  { label: '500', value: 500 },
+                  { label: '1000', value: 1000 },
+                ]
+              }
+              onPress={ (value) => this.setState({ volume: value, showPicker: false }) }
+            />
+          ) }
           <ScrollView>
             <View style={ styles.container }>
               <View style={ styles.section }>
@@ -125,16 +190,27 @@ export default connect(
                   <Feather style={ styles.aboutListIcon } name={ 'triangle' } />
                   <Text style={ styles.aboutListText }>{ equipments }</Text>
                 </View>
-                <View style={ styles.aboutListItem }>
+                <View style={ [styles.aboutListItem, { marginBottom: 10 }] }>
                   <Feather style={ styles.aboutListIcon } name={ 'hexagon' } />
                   <Text style={ styles.aboutListText }>{ muscles }</Text>
+                </View>
+                <View style={ styles.aboutListItem }>
+                  <Feather style={ styles.aboutListIcon } name={ 'square' } />
+                  <Text style={ styles.aboutListText }>Volume</Text>
+                  <TouchableOpacity
+                    onPress={ () => this.setState({ showPicker: true }) }
+                    style={{ flexDirection: 'row', alignItems: 'center' }}
+                  >
+                    <Text style={ styles.aboutListVolumeText }>{ this.state.volume }</Text>
+                    <Feather style={ styles.aboutListVolumeIcon } name={ 'chevron-down' } />
+                  </TouchableOpacity>
                 </View>
               </View>
               <View style={ styles.section }>
                 <Text style={ styles.title }>Summary</Text>
                 <View style={ styles.exercise }>
                   <Image style={ styles.exerciseImage } source={{ uri: exercise.image }} />
-                  <Text style={ styles.exerciseLabel }>0x { exercise.label }</Text>
+                  <Text style={ styles.exerciseLabel }>{ this.state.volume }x { exercise.label }</Text>
                 </View>
               </View>
             </View>
