@@ -45,7 +45,11 @@ export default connect(
     exercises: state.exercises,
     workouts: state.workouts,
   }),
-  null
+  dispatch => {
+    return {
+      addLog: (payload) => dispatch({ type: 'ADD_LOG', payload })
+    };
+  }
 )(
   class extends Component {
     static navigationOptions = {
@@ -55,7 +59,7 @@ export default connect(
     constructor(props) {
       super(props);
       this.state = {
-        technique: 0,
+        score: 0,
       };
     }
 
@@ -77,11 +81,10 @@ export default connect(
     }
 
     _saveFeedback = () => {
-      // Send event to redux-saga
-      // ...this.props.navigation.state.params,
-      // ...this.state
-
-      // Redirect to ExerciseList
+      this.props.addLog({
+        ...this.props.navigation.state.params,
+        ...this.state
+      });
       this.props.navigation.navigate('Home');
     }
 
@@ -97,7 +100,7 @@ export default connect(
                 How was your technique ?
               </Text>
               <Text style={{ fontSize: 15, color: 'white', textAlign: 'center' }}>
-                { pickFeedback(this.state.technique) }
+                { pickFeedback(this.state.score) }
               </Text>
               <Slider
                 style={{ width: width - 40, height: 100 }}
@@ -106,7 +109,7 @@ export default connect(
                 minimumTrackTintColor={ '#007ACA' }
                 maximumTrackTintColor={ 'white' }
                 thumbTintColor={ 'white' }
-                onSlidingComplete={ (value) => this.setState({ technique: value }) }
+                onSlidingComplete={ (value) => this.setState({ score: value }) }
               />
             </View>
             <SubmitButton
