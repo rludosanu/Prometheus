@@ -12,7 +12,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import {
   getWorkoutMuscles,
   getWorkoutDifficulty,
-  formatWorkoutsList
+  formatWorkoutsList,
+  formatWorkoutMuscles
 } from './../../../helpers/workout';
 
 const stylesColoredDots = StyleSheet.create({
@@ -88,25 +89,23 @@ const stylesWorkouts = StyleSheet.create({
 });
 
 function Workouts({ workouts, filters, onPress }) {
-  console.log('filters', filters);
-  console.log(`filters.length = ${filters.length}`);
   return (
     <ScrollView style={ stylesWorkouts.container }>
       { workouts.filter(workout => {
         let points = 0;
+        let filter;
 
         if (!filters || !filters.length) {
           return true;
         } else {
-          for (let filter of filters) {
+          for (filter of filters) {
             if (filter.type === 'difficulty' && filter.value === workout.difficulty) {
               points += 1;
             } else if (filter.type === 'muscles' && workout.muscles.includes(filter.value)) {
               points += 1;
             }
-            console.log(`points = ${points}`);
-            return points === filters.length ? true : false;
           }
+          return points === filters.length;
         }
       }).map(workout => (
         <TouchableOpacity
@@ -120,7 +119,7 @@ function Workouts({ workouts, filters, onPress }) {
           />
           <View>
             <Text style={ stylesWorkouts.name }>{ workout.label }</Text>
-            <Text style={ stylesWorkouts.body }>{ workout.muscles.map(muscle => muscle.charAt(0).toUpperCase() + muscle.slice(1)).join(', ') }</Text>
+            <Text style={ stylesWorkouts.body }>{ formatWorkoutMuscles(workout.muscles) }</Text>
             <View style={ stylesWorkouts.difficulty }>
               <ColoredDots count={ workout.difficulty } />
               <Text style={ stylesWorkouts.label }>Difficulty</Text>
@@ -235,10 +234,6 @@ export default connect(
       this.state = {
         filters: []
       };
-    }
-
-    componentDidUpdate() {
-      this.state.filters.map(filter => console.log(filter));
     }
 
     _updateFilters = (filter) => {

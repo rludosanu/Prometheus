@@ -98,3 +98,7 @@ export function formatWorkoutsList(workouts, exercises, equipments) {
     return list;
   }, []);
 }
+
+export function formatWorkoutMuscles(mucles) {
+  return (muscles || []).map(muscle => muscle.charAt(0).toUpperCase() + muscle.slice(1)).join(', ');
+}
