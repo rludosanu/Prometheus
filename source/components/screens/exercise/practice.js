@@ -1,66 +1,99 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Alert
 } from 'react-native';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
+import SubmitButton from '../../uikit/submit-button';
+import Feather from 'react-native-vector-icons/Feather';
 
-const { width, height } = Dimensions.get('window');
-const stylesExercise = StyleSheet.create({
-  screen: { backgroundColor: '#161616', flex: 1 },
-  background: { width: width, height: height - 80 },
-  container: { flex: 1, alignItems: 'center', justifyContent: 'flex-end', padding: 20 },
-  stopwatch: { fontSize: 90, color: 'white', marginBottom: 10 },
-  volume: { flexDirection: 'row', alignItems: 'flex-end', marginBottom: 5 },
-  volumeNumber: { fontSize: 34, fontWeight: 'bold', color: 'white' },
-  volumeTimes: { fontSize: 24, color: 'white' },
-  label: { fontSize: 32, color: 'white', marginBottom: 20 },
-  button: { backgroundColor: '#007ACA', borderRadius: 4, padding: 16, alignItems: 'center', justifyContent: 'center', width: width - 20 },
-  buttonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
-});
-const stylesModal = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', backgroundColor: '#161616' },
-  body: { flexGrow: 1, padding: 20, alignItems: 'center', justifyContent: 'center' },
-  title: { fontSize: 22, fontWeight: 'bold', color: 'white', textAlign: 'center', marginBottom: 60 },
-  question: { fontSize: 16, fontWeight: 'bold', color: 'white', textAlign: 'center', marginBottom: 20 },
-  resumeButton: { marginBottom: 20 },
-  resumeText: { fontSize: 16, fontWeight: 'bold', color: 'white', borderWidth: 1, borderColor: 'white', borderRadius: 4, padding: 16 },
-  submitButton: { backgroundColor: '#007ACA', borderRadius: 4, padding: 16, alignItems: 'center', justifyContent: 'center', width: width - 20, marginBottom: 10 },
-  submitText: { fontSize: 16, fontWeight: 'bold', color: 'white' }
-});
+const {width, height} = Dimensions.get('window');
 
-function FeedbackModal(props) {
+function formatSeconds(value) {
+  let seconds = ('0' + (Math.floor(value % 60))).slice(-2);
+  let minutes = ('0' + (Math.floor(value / 60) % 60)).slice(-2);
+  let hours = ('0' + Math.floor(value / 3600)).slice(-2);
+
+  if (hours !== '00') {
+    return `${hours}:${minutes}:${seconds}`;
+  } else {
+    return `${minutes}:${seconds}`;
+  }
+}
+
+function Feedback({onResume, onFeedback}) {
   return (
-    <View style={ stylesModal.container }>
-      <View style={ stylesModal.body }>
-        <Text style={ stylesModal.title }>
+    <View style={{flex: 1, alignItems: 'center', backgroundColor: '#161616'}}>
+      <View style={{flexGrow: 1, padding: 20, alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={{fontSize: 22, fontWeight: 'bold', color: 'white', textAlign: 'center', marginBottom: 60}}>
           Nice job. You're done. Time to give your Coach feedback.
         </Text>
-        <Text style={ stylesModal.question }>
+        <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white', textAlign: 'center', marginBottom: 20}}>
           Finished accidentally ?
         </Text>
         <TouchableOpacity
-          onPress={ () => {} }
-          style={ stylesModal.resumeButton }
+          onPress={onResume}
+          style={{marginBottom: 20}}
         >
-          <Text style={ stylesModal.resumeText }>
+          <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white', borderWidth: 1, borderColor: 'white', borderRadius: 4, padding: 16}}>
             Resume
           </Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        onPress={ () => {} }
-        style={ stylesModal.submitButton }
-      >
-        <Text style={ stylesModal.submitText }>
-          Give Coach Feedback
-        </Text>
-      </TouchableOpacity>
+      <SubmitButton
+        text={'Give Coach Feedback'}
+        onPress={onFeedback}
+      />
     </View>
+  );
+}
+
+function Practice({image, chrono, volume, label, onFinish}) {
+  return (
+    <ImageBackground
+      source={{uri: image}}
+      style={{width: '100%', height: '100%'}}
+    >
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end'}}>
+        <Text style={{fontSize: 90, color: 'white', marginBottom: 10}}>
+          {formatSeconds(chrono)}
+        </Text>
+        <View style={{flexDirection: 'row', alignItems: 'flex-end', marginBottom: 5}}>
+          <Text style={{fontSize: 34, fontWeight: 'bold', color: 'white'}}>
+            {volume}
+          </Text>
+          <Text style={{fontSize: 24, color: 'white'}}>
+            x
+          </Text>
+        </View>
+        <Text style={{fontSize: 32, color: 'white', marginBottom: 20}}>
+          {label}
+        </Text>
+        <SubmitButton
+          text={'Finish'}
+          onPress={onFinish}
+        />
+      </View>
+    </ImageBackground>
+  )
+}
+
+function GoBackButton({onGoBack}) {
+  return (
+    <TouchableOpacity
+      onPress={onGoBack}
+      style={{position: 'absolute', zIndex: 999, top: 20, left: 20}}
+    >
+      <Feather
+        name={'x'}
+        style={{fontSize: 24, color: 'white'}}
+       />
+    </TouchableOpacity>
   );
 }
 
@@ -71,100 +104,113 @@ export default connect(
   null
 )(
   class extends Component {
-    static navigationOptions = ({ navigation }) => {
-      return {
-        title: navigation.getParam('label'),
-        headerStyle: {
-          backgroundColor: '#222222'
-        },
-        headerTintColor: 'white'
-      };
+    static navigationOptions = {
+      header: null
     };
 
     constructor(props) {
       super(props);
       this.state = {
-        seconds: 0,
+        chrono: 0,
+        screen: 'practice'
       };
       this.handle = null;
     }
 
     componentDidMount() {
+      this._startChrono();
+    }
+
+    componentWillUnmount() {
+      this._stopChrono();
+    }
+
+    _startChrono = () => {
       this.handle = setInterval(() => {
         this.setState(state => ({
-          seconds: state.seconds + 1
+          chrono: state.chrono + 1
         }));
       }, 1000);
     }
 
-    componentWillUnmount() {
+    _stopChrono = () => {
       clearInterval(this.handle);
       this.handle = null;
-    }
-
-    _formatTime = (value) => {
-      let seconds = ('0' + (Math.floor(value % 60))).slice(-2);
-      let minutes = ('0' + (Math.floor(value / 60) % 60)).slice(-2);
-      let hours = ('0' + Math.floor(value / 3600)).slice(-2);
-
-      if (hours !== '00') {
-        return `${hours}:${minutes}:${seconds}`;
-      } else {
-        return `${minutes}:${seconds}`;
-      }
     }
 
     _finish = () => {
-      clearInterval(this.handle);
-      this.handle = null;
-      this.props.navigation.navigate('ExerciseFeedback', {
-        id: this.props.navigation.getParam('id'),
-        volume: this.props.navigation.getParam('volume'),
-        seconds: this.state.seconds,
+      this._stopChrono();
+      this.setState({
+        screen: 'feedback'
       });
     }
 
+    _resume = () => {
+      this._startChrono();
+      this.setState({
+        screen: 'practice'
+      });
+    }
+
+    _feedback = () => {
+      this.props.navigation.navigate('ExerciseFeedback', {
+        id: this.props.navigation.getParam('id'),
+        volume: this.props.navigation.getParam('volume'),
+        chrono: this.state.chrono,
+      });
+    }
+
+    _giveUp = () => {
+      Alert.alert(
+        'Giving up is not an option',
+        'Are you sure you want to cancel this session ?',
+        [
+          {
+            text: 'No',
+            onPress: () => {},
+          },
+          {
+            text: 'Yes',
+            onPress: this._goBack
+          },
+        ],
+      );
+    }
+
+    _goBack = () => {
+      this._stopChrono();
+      this.props.navigation.goBack();
+    }
+
     render() {
-      const { exercises, navigation } = this.props;
-      const { seconds } = this.state;
+      const {exercises, navigation} = this.props;
+      const {screen, chrono} = this.state;
       const id = navigation.getParam('id');
       const label = navigation.getParam('label');
       const volume = navigation.getParam('volume');
       const exercise = exercises[id];
 
       return (
-        <FeedbackModal />
+        <View style={{flex: 1}}>
+          <GoBackButton
+            onGoBack={this._giveUp}
+          />
+          {screen === 'practice' ? (
+            <Practice
+              image={exercise.image}
+              chrono={chrono}
+              volume={volume}
+              label={label}
+              onFinish={this._finish}
+            />
+            ) : (
+            <Feedback
+              onResume={this._resume}
+              onFeedback={this._feedback}
+            />
+          )}
+        </View>
       );
     }
   }
 );
-
-/*<ImageBackground
-  source={{ uri: exercise.image }}
-  style={ styles.background }
->
-  <View style={ styles.container }>
-    <Text style={ styles.stopwatch }>
-      { this._formatTime(seconds) }
-    </Text>
-    <View style={ styles.volume }>
-      <Text style={ styles.volumeNumber }>
-        { volume }
-      </Text>
-      <Text style={ styles.volumeTimes }>
-        x
-      </Text>
-    </View>
-    <Text style={ styles.label }>
-      { label }
-    </Text>
-    <TouchableOpacity
-      onPress={ this._finish }
-      style={ styles.button }
-    >
-      <Text style={ styles.buttonText }>
-        Finish
-      </Text>
-    </TouchableOpacity>
-  </View>
-</ImageBackground>*/
