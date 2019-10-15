@@ -13,27 +13,21 @@ import Feather from 'react-native-vector-icons/Feather';
 const { width, height } = Dimensions.get('window');
 
 const logs = [{
-  username: 'Razvan Ludosanu',
-  date: '2d',
-  label: '10x Burpee Squat Jumps',
-  chrono: '00:45',
+  userId: 'rludosanu',
+  timestamp: '2d',
+  type: 'exercise',
+  exerciseId: '',
+  duration: '00:45',
   image: 'https://images.pexels.com/photos/2294363/pexels-photo-2294363.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-  comment: null,
-}, {
-  username: 'Razvan Ludosanu',
-  date: '1w',
-  label: 'Athena',
-  chrono: '06:23',
-  image: null,
-  comment: 'What a great way to start the week !',
+  feedback: null,
+  clapCount: 0,
+  commentCount: 0
 }];
 
 const stylesLog = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderColor: '#EBEBEB',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   header: {
     flexDirection: 'row',
@@ -188,7 +182,7 @@ export default connect(
   class extends Component {
     render() {
       return (
-        <ScrollView style={{ backgroundColor: '#c8c8c8' }}>
+        <ScrollView style={{ backgroundColor: '#EBEBEB' }}>
           <Header />
           { logs.map((log, index) => (
             <Log
