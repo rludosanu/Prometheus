@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -39,17 +38,6 @@ const AppContainer = createAppContainer(
             <Feather
               style={{ fontSize: 26, color: tintColor }}
               name={ 'layout' }
-            />
-          ),
-        })
-      },
-      Stared: {
-        screen: () => (<View></View>),
-        navigationOptions: () => ({
-          tabBarIcon: ({ tintColor }) => (
-            <Feather
-              style={{ fontSize: 26, color: tintColor }}
-              name={ 'bookmark' }
             />
           ),
         })
@@ -108,18 +96,7 @@ const AppContainer = createAppContainer(
             />
           ),
         })
-      },
-      Notifications: {
-        screen: () => (<View></View>),
-        navigationOptions: () => ({
-          tabBarIcon: ({ tintColor }) => (
-            <Feather
-              style={{ fontSize: 26, color: tintColor }}
-              name={ 'hash' }
-            />
-          ),
-        })
-      },
+      }
     }, {
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarOptions: {
