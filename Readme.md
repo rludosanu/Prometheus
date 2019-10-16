@@ -1,8 +1,10 @@
 # Prometheus
 
-A free calisthenics app for iOS and Android mobile devices.
+A free calisthenics native app for mobile devices.
 
 ## Data models
+
+**Exercises** and **workouts** rely on other entries to work like **muscle groups** and **equipments**.
 
 ### Muscle Groups
 
@@ -10,7 +12,7 @@ A free calisthenics app for iOS and Android mobile devices.
 
 ```
 MuscleGroup {
-  label <String>
+  label <Enum['Lower', 'Upper', 'Core', 'Full Body']>
 }
 ```
 
