@@ -13,8 +13,7 @@ import rootSaga from './source/sagas';
 import Feather from 'react-native-vector-icons/Feather';
 
 import LoadingScreen from './source/components/screens/loading';
-import LogInScreen from './source/components/screens/log-in';
-import FeedScreen from './source/components/screens/feed';
+import LogInScreen from './source/components/screens/login';
 import CoachScreen from './source/components/screens/coach';
 import ProfileScreen from './source/components/screens/profile';
 import WorkoutsListScreen from './source/components/screens/workout/list';
@@ -31,17 +30,6 @@ const AppContainer = createAppContainer(
       LogIn: LogInScreen
     }),
     App: createBottomTabNavigator({
-      Feed: {
-        screen: FeedScreen,
-        navigationOptions: () => ({
-          tabBarIcon: ({ tintColor }) => (
-            <Feather
-              style={{ fontSize: 26, color: tintColor }}
-              name={ 'layout' }
-            />
-          ),
-        })
-      },
       Coach: {
         screen: createStackNavigator({
           Home: {
