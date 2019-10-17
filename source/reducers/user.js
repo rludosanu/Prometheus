@@ -26,12 +26,34 @@ export default function reducer(state = initialState, action) {
         error: payload.error || null,
         isLoading: false
       };
-    case 'LOGOUT_SUCCEEDED':
+    case 'SIGNUP_LOADING':
+      return {
+        ...initialState,
+        isLoading: true
+      };
+    case 'SIGNUP_SUCCEEDED':
+      return initialState;
+    case 'SIGNUP_FAILED':
       return {
         token: null,
-        error: null,
+        error: payload.error,
         isLoading: false
-      }
+      };
+    case 'LOGOUT_LOADING':
+      return {
+        ...initialState,
+        isLoading: true
+      };
+    case 'LOGOUT_SUCCEEDED':
+      return initialState;
+    case 'LOGOUT_FAILED':
+      return {
+        token: null,
+        error: payload.error,
+        isLoading: false
+      };
+    case 'LOGOUT_SUCCEEDED':
+      return initialState;
     default:
       return state;
   }

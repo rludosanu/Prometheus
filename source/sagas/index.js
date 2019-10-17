@@ -1,45 +1,76 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { takeLatest, all, put, call } from 'redux-saga/effects';
+import { takeLatest, takeEvery, all, put, call } from 'redux-saga/effects';
 import { localLogIn, localVerifyToken } from '../modules';
+import firebase from 'react-native-firebase';
 
-function* logOutSaga() {
-  yield call(AsyncStorage.removeItem, '@token');
+const auth = firebase.auth();
+
+function* handleSignupRequest({ email, password }) {
   yield put({
-    type: 'LOGOUT_SUCCEEDED'
+    type: 'SIGNUP_LOADING'
   });
+  try {
+    yield call(auth.createUserWithEmailAndPassword, email, password);
+    yield call({
+      type: 'SIGNUP_SUCCEEDED'
+    });
+  } catch (error) {
+    yield call({
+      type: 'SIGNUP_FAILED'
+    });
+  }
 }
 
-function* logInSaga({ email, password }) {
-  let token;
+function* handleLogoutRequest() {
+  yield put({
+    type: 'LOGOUT_LOADING'
+  });
+  try {
+    yield call(auth.signOut);
+    yield call(AsyncStorage.removeItem, 'firebase-token');
+    yield put({
+      type: 'LOGOUT_SUCCEEDED'
+    });
+  } catch (error) {
+    yield put({
+      type: 'LOGOUT_FAILED'
+    });
+  }
+}
+
+function* handleLoginRequest({ email, password }) {
+  let response;
 
   yield put({
     type: 'LOGIN_LOADING'
   });
-  if ((token = yield call(localLogIn, email, password))) {
-    yield call(AsyncStorage.setItem, '@token', token);
+  try {
+    response = yield call(auth.signInWithEmailAndPassword, email, password);
+    yield call(AsyncStorage.setItem, 'firebase-token', response.user.uid);
     yield put({
       type: 'LOGIN_SUCCEEDED',
       payload: {
-        token: token
+        token: response.user.uid
       }
     });
-  } else {
+  } catch (error) {
     yield put({
       type: 'LOGIN_FAILED',
       payload: {
-        error: 'Invalid email address or password.'
+        error: error.message
       }
     });
   }
 }
 
-function* autoLogInSaga() {
+function* handleAutoLoginRequest() {
   let token;
 
   yield put({
     type: 'LOGIN_LOADING'
   });
-  if ((token = yield call(AsyncStorage.getItem, '@token'))) {
+  token = yield call(AsyncStorage.getItem, 'firebase-token');
+  if (token) {
     yield put({
       type: 'LOGIN_SUCCEEDED',
       payload: {
@@ -56,8 +87,27 @@ function* autoLogInSaga() {
   }
 }
 
+function* watchSignupRequest() {
+  yield takeLatest('SIGNUP_REQUEST', handleSignupRequest);
+}
+
+function* watchLogoutRequest() {
+  yield takeLatest('LOGOUT_REQUEST', handleLogoutRequest);
+}
+
+function* watchLoginRequest() {
+  yield takeLatest('LOGIN_REQUEST', handleLoginRequest);
+}
+
+function* watchAutoLoginRequest() {
+  yield takeLatest('AUTO_LOGIN_REQUEST', handleAutoLoginRequest);
+}
+
 export default function* rootSaga() {
-  yield takeLatest('AUTO_LOGIN_REQUEST', autoLogInSaga);
-  yield takeLatest('LOGIN_REQUEST', logInSaga);
-  yield takeLatest('LOGOUT_REQUEST', logOutSaga);
+  yield all([
+    watchAutoLoginRequest(),
+    watchLoginRequest(),
+    watchLogoutRequest(),
+    watchSignupRequest(),
+  ]);
 }
