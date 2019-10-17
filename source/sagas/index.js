@@ -15,6 +15,18 @@ function buildResponse(type, payload) {
   return result;
 }
 
+function* handleResetPasswordRequest({ email }) {
+  yield put(buildResponse('RESET_PASSWORD_LOADING'));
+  try {
+    yield call([auth, auth.sendPasswordResetEmail], email);
+    yield put(buildResponse('RESET_PASSWORD_SUCCEEDED'));
+  } catch (error) {
+    yield put(buildResponse('RESET_PASSWORD_FAILED', {
+      error: error.message
+    }));
+  }
+}
+
 function* handleSignupRequest({ email, password, displayName }) {
   let result;
 
@@ -24,6 +36,7 @@ function* handleSignupRequest({ email, password, displayName }) {
     if (displayName) {
       yield call([result, result.user.updateProfile], { displayName });
     }
+    yield call([result, result.user.sendEmailVerification]);
     yield put(buildResponse('SIGNUP_SUCCEEDED'));
   } catch (error) {
     yield put(buildResponse('SIGNUP_FAILED', {
@@ -83,6 +96,10 @@ function* handleAutoLoginRequest() {
   }
 }
 
+function* watchResetPasswordRequest() {
+  yield takeLatest('RESET_PASSWORD_REQUEST', handleResetPasswordRequest);
+}
+
 function* watchSignupRequest() {
   yield takeLatest('SIGNUP_REQUEST', handleSignupRequest);
 }
@@ -105,5 +122,6 @@ export default function* rootSaga() {
     watchLoginRequest(),
     watchLogoutRequest(),
     watchSignupRequest(),
+    watchResetPasswordRequest(),
   ]);
 }
