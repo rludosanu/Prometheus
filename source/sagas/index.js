@@ -1,89 +1,85 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { takeLatest, takeEvery, all, put, call } from 'redux-saga/effects';
+import { takeLatest, takeEvery, all, put, call, delay } from 'redux-saga/effects';
 import { localLogIn, localVerifyToken } from '../modules';
 import firebase from 'react-native-firebase';
 
 const auth = firebase.auth();
 
-function* handleSignupRequest({ email, password }) {
-  yield put({
-    type: 'SIGNUP_LOADING'
-  });
+function buildResponse(type, payload) {
+  let result = {};
+
+  result.type = type;
+  if (payload) {
+    result.payload = payload;
+  }
+  return result;
+}
+
+function* handleSignupRequest({ email, password, displayName }) {
+  let result;
+
+  yield put(buildResponse('SIGNUP_LOADING'));
   try {
-    yield call(auth.createUserWithEmailAndPassword, email, password);
-    yield call({
-      type: 'SIGNUP_SUCCEEDED'
-    });
+    result = yield call([auth, auth.createUserWithEmailAndPassword], email, password);
+    if (displayName) {
+      yield call([result, result.user.updateProfile], { displayName });
+    }
+    yield put(buildResponse('SIGNUP_SUCCEEDED'));
   } catch (error) {
-    yield call({
-      type: 'SIGNUP_FAILED'
-    });
+    yield put(buildResponse('SIGNUP_FAILED', {
+      error: error.message
+    }));
   }
 }
 
 function* handleLogoutRequest() {
-  yield put({
-    type: 'LOGOUT_LOADING'
-  });
+  yield put(buildResponse('LOGOUT_LOADING'));
   try {
-    yield call(auth.signOut);
+    yield call([auth, auth.signOut]);
     yield call(AsyncStorage.removeItem, 'firebase-token');
-    yield put({
-      type: 'LOGOUT_SUCCEEDED'
-    });
+    yield put(buildResponse('LOGOUT_SUCCEEDED'));
   } catch (error) {
-    yield put({
-      type: 'LOGOUT_FAILED'
-    });
+    yield put(buildResponse('LOGOUT_FAILED'));
   }
 }
 
 function* handleLoginRequest({ email, password }) {
   let response;
 
-  yield put({
-    type: 'LOGIN_LOADING'
-  });
+  yield put(buildResponse('LOGIN_LOADING'));
   try {
-    response = yield call(auth.signInWithEmailAndPassword, email, password);
+    response = yield call([auth, auth.signInWithEmailAndPassword], email, password);
     yield call(AsyncStorage.setItem, 'firebase-token', response.user.uid);
-    yield put({
-      type: 'LOGIN_SUCCEEDED',
-      payload: {
-        token: response.user.uid
-      }
-    });
+    yield put(buildResponse('LOGIN_SUCCEEDED', {
+      token: response.user.uid
+    }));
   } catch (error) {
-    yield put({
-      type: 'LOGIN_FAILED',
-      payload: {
-        error: error.message
-      }
-    });
+    yield put(buildResponse('LOGIN_FAILED', {
+      error: error.message
+    }));
   }
 }
 
 function* handleAutoLoginRequest() {
   let token;
 
-  yield put({
-    type: 'LOGIN_LOADING'
-  });
-  token = yield call(AsyncStorage.getItem, 'firebase-token');
-  if (token) {
-    yield put({
-      type: 'LOGIN_SUCCEEDED',
-      payload: {
+  yield put(buildResponse('LOGIN_LOADING'));
+  try {
+    token = yield call(AsyncStorage.getItem, 'firebase-token');
+    yield delay(1000);
+    if (token) {
+      yield put(buildResponse('LOGIN_SUCCEEDED', {
         token: token
-      }
-    });
-  } else {
-    yield put({
-      type: 'LOGIN_FAILED',
-      payload: {
+      }));
+    } else {
+      yield put(buildResponse('LOGIN_FAILED', {
         error: null
-      }
-    });
+      }));
+    }
+  } catch (error) {
+    yield put(buildResponse('LOGIN_FAILED', {
+      error: error
+    }));
   }
 }
 

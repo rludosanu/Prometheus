@@ -1,7 +1,20 @@
 import React, { Component } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import styles from './styles';
+import { colors } from '../../uikit/styles';
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.black
+  },
+  name: {
+    fontSize: 45,
+    color: colors.white,
+  }
+});
 
 export default connect(
   state => {
@@ -33,7 +46,7 @@ export default connect(
     render() {
       return (
         <View style={ styles.screen }>
-          <ActivityIndicator />
+          <Text style={ styles.name }>Prometheus</Text>
         </View>
       );
     }
