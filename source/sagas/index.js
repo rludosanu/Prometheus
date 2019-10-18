@@ -59,6 +59,11 @@ function* handleLogoutRequest() {
  * a LOGIN_SUCCEEDED event to the store with user's profile data and access
  * token. On error, it dispatches a LOGIN_FAILED event to the store with the
  * correponding error message.
+ *
+ * @param {String} email | An email address
+ * @param {String} password | An alphanumeric password
+ *
+ * @returns {Object} response | The response to dispatch
  */
 function* handleLoginRequest({ email, password }) {
   let response;

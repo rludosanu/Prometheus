@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text, Alert } from 'react-native';
+import { ScrollView, View, Alert } from 'react-native';
 import { Header, Form, Popup } from '../../uikit';
 import { connect } from 'react-redux';
 import is from 'is_js';
