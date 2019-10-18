@@ -3,6 +3,7 @@ import { takeLatest, takeEvery, all, put, call, delay } from 'redux-saga/effects
 import firebase from 'react-native-firebase';
 
 const auth = firebase.auth();
+const database = firebase.firestore();
 
 function buildResponse(type, payload) {
   let result = {};
@@ -123,6 +124,14 @@ function* handleAutoLoginRequest() {
   }
 }
 
+function* handleReadUserLogsRequest() {
+  console.log('[handleReadUserLogsRequest]');
+}
+
+function* watchReadUserLogsRequest() {
+  yield takeEvery('READ_USER_LOGS_REQUEST', handleReadUserLogsRequest);
+}
+
 function* watchResetPasswordRequest() {
   yield takeLatest('RESET_PASSWORD_REQUEST', handleResetPasswordRequest);
 }
@@ -150,5 +159,6 @@ export default function* rootSaga() {
     watchLogoutRequest(),
     watchSignupRequest(),
     watchResetPasswordRequest(),
+    watchReadUserLogsRequest(),
   ]);
 }
