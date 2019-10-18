@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { takeLatest, takeEvery, all, put, call, delay } from 'redux-saga/effects';
-import { localLogIn, localVerifyToken } from '../modules';
 import firebase from 'react-native-firebase';
 
 const auth = firebase.auth();
@@ -27,16 +26,12 @@ function* handleResetPasswordRequest({ email }) {
   }
 }
 
-function* handleSignupRequest({ email, password, displayName }) {
+function* handleSignupRequest({ email, password }) {
   let result;
 
   yield put(buildResponse('SIGNUP_LOADING'));
   try {
     result = yield call([auth, auth.createUserWithEmailAndPassword], email, password);
-    if (displayName) {
-      yield call([result, result.user.updateProfile], { displayName });
-    }
-    yield call([result, result.user.sendEmailVerification]);
     yield put(buildResponse('SIGNUP_SUCCEEDED'));
   } catch (error) {
     yield put(buildResponse('SIGNUP_FAILED', {
@@ -56,6 +51,15 @@ function* handleLogoutRequest() {
   }
 }
 
+/**
+ * Handles user's login request
+ *
+ * This even is triggered by a Login screen form submit. It sends the email and
+ * password of the user to Firebase authentication. On success, it dispatches
+ * a LOGIN_SUCCEEDED event to the store with user's profile data and access
+ * token. On error, it dispatches a LOGIN_FAILED event to the store with the
+ * correponding error message.
+ */
 function* handleLoginRequest({ email, password }) {
   let response;
 
@@ -64,7 +68,11 @@ function* handleLoginRequest({ email, password }) {
     response = yield call([auth, auth.signInWithEmailAndPassword], email, password);
     yield call(AsyncStorage.setItem, 'firebase-token', response.user.uid);
     yield put(buildResponse('LOGIN_SUCCEEDED', {
-      token: response.user.uid
+      uid: response.user.uid,
+      profile: {
+        email: response.user.email,
+        displayName: response.user.displayName,
+      }
     }));
   } catch (error) {
     yield put(buildResponse('LOGIN_FAILED', {
@@ -73,25 +81,39 @@ function* handleLoginRequest({ email, password }) {
   }
 }
 
+/**
+ * Handles app's login request
+ *
+ * This even is triggered by the Loading screen on app launch. It tries to
+ * retrieve the Firebase token from device's async storage. On success, it
+ * dispatches a LOGIN_SUCCEEDED event to the store with the user's profile
+ * data. On error, it dispatches a LOGIN_FAILED event to the store with the
+ * correponding error message.
+ */
 function* handleAutoLoginRequest() {
   let token;
+  let user;
 
   yield put(buildResponse('LOGIN_LOADING'));
   try {
     token = yield call(AsyncStorage.getItem, 'firebase-token');
-    yield delay(1000);
     if (token) {
+      user = firebase.auth().currentUser;
       yield put(buildResponse('LOGIN_SUCCEEDED', {
-        token: token
+        uid: token,
+        profile: {
+          email: user.email,
+          displayName: user.displayName,
+        }
       }));
     } else {
       yield put(buildResponse('LOGIN_FAILED', {
-        error: null
+        error: ''
       }));
     }
   } catch (error) {
     yield put(buildResponse('LOGIN_FAILED', {
-      error: error
+      error: error.message
     }));
   }
 }

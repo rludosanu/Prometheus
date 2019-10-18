@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
-import userReducer from './user';
+import authReducer from './auth';
 import exerciseReducer from './exercise';
 import equipmentReducer from './equipment';
 import workoutReducer from './workout'
 import logReducer from './log'
 
 export default combineReducers({
-  user: userReducer,
+  auth: authReducer,
   exercises: exerciseReducer,
   equipments: equipmentReducer,
   workouts: workoutReducer,

@@ -1,82 +1,19 @@
-import React, { Component, Fragment } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
-  StyleSheet
-} from 'react-native';
+import React, { Component } from 'react';
+import { ScrollView, View, Text, Button, Alert } from 'react-native';
+import { Header, Form, Popup } from '../../uikit';
 import { connect } from 'react-redux';
-import { colors } from '../../uikit/styles';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: 'white'
-  },
-  backButton: {
-    color: '#373737',
-    fontSize: 22,
-    marginBottom: 20
-  },
-  title: {
-    color: '#373737',
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 60
-  },
-  placeholder: {
-    color: '#BDBCBA',
-    fontSize: 16
-  },
-  input: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#BDBCBA',
-    color: '#373737',
-    alignSelf: 'stretch',
-    fontSize: 16,
-    marginBottom: 24,
-    paddingLeft: 0,
-    paddingRight: 0,
-    paddingBottom: 10
-  },
-  button: {
-    backgroundColor: colors.blue,
-    borderRadius: 4,
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-    marginBottom: 20
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16
-  },
-  error: {
-    marginBottom: 10
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 15
-  },
-  link: {
-    fontSize: 16,
-    color: colors.blue,
-    textAlign: 'center'
-  }
-});
+import is from 'is_js';
 
 export default connect(
-  state => {
-    return state;
-  },
+  state => ({
+    auth: state.auth
+  }),
   dispatch => {
     return {
-      signup: payload => dispatch({ type: 'SIGNUP_REQUEST', ...payload })
+      signup: payload => dispatch({
+        type: 'SIGNUP_REQUEST',
+        ...payload
+      })
     };
   }
 )(
@@ -90,70 +27,98 @@ export default connect(
       this.state = {
         email: 'razvan@prometheus.com',
         password: 'helloworld',
-        displayName: 'Razvan Ludosanu'
+        confirmPassword: 'helloworld',
+        isModalVisible: false
       };
     }
 
-    componentDidUpdate(props) {
-      //
+    componentDidUpdate(prevProps) {
+      if (
+        prevProps.auth.status !== this.props.auth.status &&
+        this.props.auth.status === 'SIGNED_UP'
+      ) {
+        this.setState({
+          isModalVisible: true
+        });
+      }
+    }
+
+    signup = () => {
+      const { email, password, confirmPassword } = this.state;
+      let error;
+
+      if (is.empty(email) || !is.email(email)) {
+        error = 'Invalid email address';
+      } else if (is.empty(password) || !is.alphaNumeric(password)) {
+        error = 'Invalid password';
+      } else if (is.empty(confirmPassword) || password !== confirmPassword) {
+        error = 'Invalid password confirmation';
+      } else {
+        error = null;
+      }
+      if (error) {
+        Alert.alert(error);
+      } else {
+        this.props.signup({ email, password });
+      }
     }
 
     render() {
-      const { error, isLoading } = this.props.user;
-      const { email, password, displayName } = this.state;
+      const { pending, error } = this.props.auth.process;
+      const { email, password, confirmPassword } = this.state;
 
       return (
-        <View style={ styles.screen }>
-          <TouchableOpacity onPress={ () => this.props.navigation.goBack() }>
-            <Icon
-              name={ 'long-arrow-alt-left' }
-              style={ styles.backButton }
+        <ScrollView>
+          <Popup
+            title={ 'Thank you' }
+            message={ 'You can now close this popup and log in to experience Prometheus.' }
+            label={ 'DONE' }
+            icon={ 'heart' }
+            isVisible={ this.state.isModalVisible }
+            onClose={ () => this.setState({ isModalVisible: false }) }
+          />
+          <View style={{ padding: 20 }}>
+            <Header
+              title={ 'Signup' }
+              onGoBack={ () => this.props.navigation.goBack() }
             />
-          </TouchableOpacity>
-          <Text style={ styles.title }>Signup</Text>
-          <Text style={ styles.placeholder }>Name</Text>
-          <TextInput
-            style={ styles.input }
-            placeholderTextColor={ '#373737' }
-            onChangeText={ text => this.setState({ displayName: text }) }
-            value={ displayName }
-            placeholder={ 'Your display name' }
-          />
-          <Text style={ styles.placeholder }>Email</Text>
-          <TextInput
-            style={ styles.input }
-            placeholderTextColor={ '#373737' }
-            onChangeText={ text => this.setState({ email: text }) }
-            value={ email }
-            placeholder={ 'Your email address' }
-            keyboardType={ 'email-address' }
-          />
-          <Text style={ styles.placeholder }>Password</Text>
-          <TextInput
-            style={ styles.input }
-            placeholderTextColor={ '#373737' }
-            onChangeText={ text => this.setState({ password: text }) }
-            value={ password }
-            placeholder={ 'Your password' }
-            secureTextEntry={ true }
-          />
-          { isLoading === true && (
-            <View style={ styles.error }>
-              <ActivityIndicator />
-            </View>
-          ) }
-          { error !== null && (
-            <View style={ styles.error }>
-              <Text style={ styles.errorText }>{ error }</Text>
-            </View>
-          ) }
-          <TouchableOpacity
-            style={ styles.button }
-            onPress={ () => this.props.signup({ email, password }) }
-          >
-            <Text style={ styles.buttonText }>Signup</Text>
-          </TouchableOpacity>
-        </View>
+            <Form
+              inputs={
+                [
+                  {
+                    label: 'Email',
+                    onChangeText: text => this.setState({ email: text }),
+                    value: email,
+                    placeholder: 'Your email address',
+                    keyboardType: 'email-address',
+                  },
+                  {
+                    label: 'Password',
+                    onChangeText: text => this.setState({ password: text }),
+                    value: password,
+                    placeholder: 'Your password',
+                    secureTextEntry: true,
+                  },
+                  {
+                    label: 'Confirm Password',
+                    onChangeText: text => this.setState({ confirmPassword: text }),
+                    value: confirmPassword,
+                    placeholder: 'Confirm your password',
+                    secureTextEntry: true,
+                  }
+                ]
+              }
+              pending={ pending }
+              error={ error }
+              submit={
+                {
+                  label: 'Signup',
+                  onPress: this.signup
+                }
+              }
+            />
+          </View>
+        </ScrollView>
       );
     }
   }

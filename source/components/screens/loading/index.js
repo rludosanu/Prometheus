@@ -33,9 +33,9 @@ export default connect(
       this.props.autoLogIn();
     }
 
-    componentDidUpdate(props) {
-      if (!this.props.user.isLoading) {
-        if (props.user.token !== this.props.user.token && this.props.user.token) {
+    componentDidUpdate(prevProps) {
+      if (!this.props.auth.process.pending) {
+        if (prevProps.auth.status !== this.props.auth.status && this.props.auth.status === 'LOGGED_IN') {
           this.props.navigation.navigate('App');
         } else {
           this.props.navigation.navigate('Auth');
