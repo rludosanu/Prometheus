@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text, Alert } from 'react-native';
+import { ScrollView, View, Alert } from 'react-native';
 import { Header, Form, Popup } from '../../uikit';
 import { connect } from 'react-redux';
 import is from 'is_js';
@@ -10,8 +10,8 @@ export default connect(
   }),
   dispatch => {
     return {
-      signup: payload => dispatch({
-        type: 'SIGNUP_REQUEST',
+      resetPassword: payload => dispatch({
+        type: 'RESET_PASSWORD_REQUEST',
         ...payload
       })
     };
@@ -26,16 +26,13 @@ export default connect(
       super(props);
       this.state = {
         email: '',
-        password: '',
-        confirmPassword: '',
-        isModalVisible: false
       };
     }
 
     componentDidUpdate(prevProps) {
       if (
         prevProps.auth.status !== this.props.auth.status &&
-        this.props.auth.status === 'SIGNED_UP'
+        this.props.auth.status === 'RESET_PASSWORD_EMAIL_SENT'
       ) {
         this.setState({
           isModalVisible: true
@@ -43,43 +40,39 @@ export default connect(
       }
     }
 
-    signup = () => {
-      const { email, password, confirmPassword } = this.state;
+    resetPassword = () => {
+      const { email } = this.state;
       let error;
 
       if (is.empty(email) || !is.email(email)) {
         error = 'Invalid email address';
-      } else if (is.empty(password) || !is.alphaNumeric(password)) {
-        error = 'Invalid password';
-      } else if (is.empty(confirmPassword) || password !== confirmPassword) {
-        error = 'Invalid password confirmation';
       } else {
         error = null;
       }
       if (error) {
         Alert.alert(error);
       } else {
-        this.props.signup({ email, password });
+        this.props.resetPassword({ email });
       }
     }
 
     render() {
       const { pending, error } = this.props.auth.process;
-      const { email, password, confirmPassword } = this.state;
+      const { email } = this.state;
 
       return (
         <ScrollView>
           <Popup
-            title={ 'Thank you' }
-            message={ 'You can now close this popup and log in to experience Prometheus.' }
-            label={ 'DONE' }
-            icon={ 'heart' }
+            title={ 'Done !' }
+            message={ 'An email to reset your password is on the way, check your mailbox.' }
+            label={ 'OK' }
+            icon={ 'paper-plane' }
             isVisible={ this.state.isModalVisible }
             onClose={ () => this.setState({ isModalVisible: false }) }
           />
           <View style={{ padding: 20 }}>
             <Header
-              title={ 'Signup' }
+              title={ 'Reset Password' }
               onGoBack={ () => this.props.navigation.goBack() }
             />
             <Form
@@ -91,20 +84,6 @@ export default connect(
                     value: email,
                     placeholder: 'Your email address',
                     keyboardType: 'email-address',
-                  },
-                  {
-                    label: 'Password',
-                    onChangeText: text => this.setState({ password: text }),
-                    value: password,
-                    placeholder: 'Your password',
-                    secureTextEntry: true,
-                  },
-                  {
-                    label: 'Confirm Password',
-                    onChangeText: text => this.setState({ confirmPassword: text }),
-                    value: confirmPassword,
-                    placeholder: 'Confirm your password',
-                    secureTextEntry: true,
                   }
                 ]
               }
@@ -112,8 +91,8 @@ export default connect(
               error={ error }
               submit={
                 {
-                  label: 'Signup',
-                  onPress: this.signup
+                  label: 'Reset Password',
+                  onPress: this.resetPassword
                 }
               }
             />

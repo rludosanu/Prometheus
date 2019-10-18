@@ -25,8 +25,8 @@ export default connect(
     constructor(props) {
       super(props);
       this.state = {
-        email: 'razvan@prometheus.com',
-        password: 'helloworld'
+        email: '',
+        password: ''
       };
     }
 

@@ -16,6 +16,7 @@ import LoadingScreen from './source/components/screens/loading';
 import OnboardingScreen from './source/components/screens/onboarding';
 import LoginScreen from './source/components/screens/login';
 import SignupScreen from './source/components/screens/signup';
+import ResetPasswordScreen from './source/components/screens/reset-password';
 import CoachScreen from './source/components/screens/coach';
 import ProfileScreen from './source/components/screens/profile';
 import WorkoutsListScreen from './source/components/screens/workout/list';
@@ -31,6 +32,7 @@ const AppContainer = createAppContainer(
     Auth: createStackNavigator({
       Onboarding: OnboardingScreen,
       Login: LoginScreen,
+      ResetPassword: ResetPasswordScreen,
       Signup: SignupScreen
     }),
     App: createBottomTabNavigator({

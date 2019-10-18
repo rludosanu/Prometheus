@@ -15,6 +15,7 @@ const defaultState = {
 
 export default function reducer(state = defaultState, { type, payload }) {
   switch (type) {
+    case 'RESET_PASSWORD_LOADING':
     case 'LOGIN_LOADING':
     case 'SIGNUP_LOADING':
     case 'LOGOUT_LOADING':
@@ -41,12 +42,19 @@ export default function reducer(state = defaultState, { type, payload }) {
         status: 'SIGNED_UP'
       };
 
+    case 'RESET_PASSWORD_SUCCEEDED':
+      return {
+        ...defaultState,
+        status: 'RESET_PASSWORD_EMAIL_SENT'
+      };
+
     case 'LOGOUT_SUCCEEDED':
       return defaultState;
 
     case 'LOGIN_FAILED':
     case 'SIGNUP_FAILED':
     case 'LOGOUT_FAILED':
+    case 'RESET_PASSWORD_FAILED':
       return {
         ...defaultState,
         process: {
