@@ -25,6 +25,7 @@ export default connect(
     constructor(props) {
       super(props);
       this.state = {
+        fullName: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -44,28 +45,36 @@ export default connect(
     }
 
     signup = () => {
-      const { email, password, confirmPassword } = this.state;
-      let error;
+      const { fullName, email, password, confirmPassword } = this.state;
+      let error = null;
 
-      if (is.empty(email) || !is.email(email)) {
+      if (is.empty(fullName) || !is.string(fullName)) {
+        error = 'Invalid full name';
+      } else if (is.empty(email) || !is.email(email)) {
         error = 'Invalid email address';
       } else if (is.empty(password) || !is.alphaNumeric(password)) {
         error = 'Invalid password';
       } else if (is.empty(confirmPassword) || password !== confirmPassword) {
         error = 'Invalid password confirmation';
-      } else {
-        error = null;
       }
       if (error) {
         Alert.alert(error);
       } else {
-        this.props.signup({ email, password });
+        this.props.signup({ fullName, email, password });
       }
+    }
+
+    goBack = () => {
+      this.setState({
+        isModalVisible: false
+      }, () => {
+        this.props.navigation.goBack();
+      });
     }
 
     render() {
       const { pending, error } = this.props.auth.process;
-      const { email, password, confirmPassword } = this.state;
+      const { fullName, email, password, confirmPassword } = this.state;
 
       return (
         <ScrollView>
@@ -75,16 +84,22 @@ export default connect(
             label={ 'DONE' }
             icon={ 'heart' }
             isVisible={ this.state.isModalVisible }
-            onClose={ () => this.setState({ isModalVisible: false }) }
+            onClose={ this.goBack }
           />
           <View style={{ padding: 20 }}>
             <Header
               title={ 'Signup' }
-              onGoBack={ () => this.props.navigation.goBack() }
+              onGoBack={ this.goBack }
             />
             <Form
               inputs={
                 [
+                  {
+                    label: 'Full Name',
+                    onChangeText: text => this.setState({ fullName: text }),
+                    value: fullName,
+                    placeholder: 'Your full name'
+                  },
                   {
                     label: 'Email',
                     onChangeText: text => this.setState({ email: text }),

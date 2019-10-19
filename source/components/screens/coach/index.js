@@ -30,28 +30,28 @@ export default connect(
       return (
         <ScrollView style={{ backgroundColor: 'white' }}>
           <CardCarousel
-            label={ ['Workouts'] }
+            label={ 'Workouts' }
             description={ 'Prometheus signature workouts' }
             background={ 'https://images.pexels.com/photos/2261482/pexels-photo-2261482.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260' }
             onPress={ () => this.props.navigation.navigate('WorkoutsList') }
             featured={ [{
-              label: 'Athena',
-              description: getWorkoutMuscles(workouts['athena'], exercises),
-              difficulty: getWorkoutDifficulty(workouts['athena'], exercises, 'number'),
+              label: 'Achilles',
+              description: getWorkoutMuscles(workouts['Achilles'], exercises),
+              difficulty: getWorkoutDifficulty(workouts['Achilles'], exercises, 'number'),
               duration: 3,
-              onPress: () => this._goToWorkout({ id: 'athena', label: 'Athena' }),
+              onPress: () => this._goToWorkout({ id: 'Achilles', label: 'Achilles' }),
             }, {
-              label: 'Morpheus',
-              description: getWorkoutMuscles(workouts['morpheus'], exercises),
-              difficulty: getWorkoutDifficulty(workouts['morpheus'], exercises, 'number'),
+              label: 'Adonis',
+              description: getWorkoutMuscles(workouts['Adonis'], exercises),
+              difficulty: getWorkoutDifficulty(workouts['Adonis'], exercises, 'number'),
               duration: 1,
-              onPress: () => this._goToWorkout({ id: 'morpheus', label: 'Morpheus' }),
+              onPress: () => this._goToWorkout({ id: 'Adonis', label: 'Adonis' }),
             }, {
-              label: 'Prometheus',
-              description: getWorkoutMuscles(workouts['prometheus'], exercises),
-              difficulty: getWorkoutDifficulty(workouts['prometheus'], exercises, 'number'),
+              label: 'Agon',
+              description: getWorkoutMuscles(workouts['Agon'], exercises),
+              difficulty: getWorkoutDifficulty(workouts['Agon'], exercises, 'number'),
               duration: 3,
-              onPress: () => this._goToWorkout({ id: 'prometheus', label: 'Prometheus' }),
+              onPress: () => this._goToWorkout({ id: 'Agon', label: 'Agon' }),
             }] }
           />
           <Card
