@@ -89,6 +89,7 @@ export function getWorkoutDifficulty(workout, exercises, output = 'number') {
   for (round of workout.rounds) {
     for (exercise of round) {
       count += 1;
+      console.log('exercise.id => ', exercise.id);
       if (exercise.id === 'rest') {
         total -= exercise.volume * 0.3;
       } else {

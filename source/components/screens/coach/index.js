@@ -36,22 +36,22 @@ export default connect(
             onPress={ () => this.props.navigation.navigate('WorkoutsList') }
             featured={ [{
               label: 'Achilles',
-              description: getWorkoutMuscles(workouts['Achilles'], exercises),
-              difficulty: getWorkoutDifficulty(workouts['Achilles'], exercises, 'number'),
+              description: getWorkoutMuscles(workouts['achilles'], exercises),
+              difficulty: getWorkoutDifficulty(workouts['achilles'], exercises, 'number'),
               duration: 3,
-              onPress: () => this._goToWorkout({ id: 'Achilles', label: 'Achilles' }),
+              onPress: () => this._goToWorkout({ id: 'achilles', label: 'Achilles' }),
             }, {
               label: 'Adonis',
-              description: getWorkoutMuscles(workouts['Adonis'], exercises),
-              difficulty: getWorkoutDifficulty(workouts['Adonis'], exercises, 'number'),
+              description: getWorkoutMuscles(workouts['adonis'], exercises),
+              difficulty: getWorkoutDifficulty(workouts['adonis'], exercises, 'number'),
               duration: 1,
-              onPress: () => this._goToWorkout({ id: 'Adonis', label: 'Adonis' }),
+              onPress: () => this._goToWorkout({ id: 'adonis', label: 'Adonis' }),
             }, {
               label: 'Agon',
-              description: getWorkoutMuscles(workouts['Agon'], exercises),
-              difficulty: getWorkoutDifficulty(workouts['Agon'], exercises, 'number'),
+              description: getWorkoutMuscles(workouts['agon'], exercises),
+              difficulty: getWorkoutDifficulty(workouts['agon'], exercises, 'number'),
               duration: 3,
-              onPress: () => this._goToWorkout({ id: 'Agon', label: 'Agon' }),
+              onPress: () => this._goToWorkout({ id: 'agon', label: 'Agon' }),
             }] }
           />
           <Card

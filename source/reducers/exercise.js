@@ -4,567 +4,567 @@ var i = {
 };
 
 const exercises = {
-  'ArcherPullups': {
+  'archerpullups': {
     label: 'Archer Pullups',
     score: 1.5,
     equipments: ['pullupbar'],
     muscles: ['shoulders', 'triceps', 'forearms'],
     ...i
   },
-  'ArcherPushups': {
+  'archerpushups': {
     label: 'Archer Pushups',
     score: 0.9,
     equipments: [],
     muscles: ['chest', 'triceps', 'shoulders'],
     ...i
   },
-  'ArmLegLiftsLeft': {
+  'armlegliftsleft': {
     label: 'Arm & Leg Lifts Left',
     score: 0.3,
     equipments: [],
     muscles: ['hamstrings', 'shoulders'],
     ...i
   },
-  'ArmLegLiftsRight': {
+  'armlegliftsright': {
     label: 'Arm & Leg Lifts Right',
     score: 0.3,
     equipments: [],
     muscles: ['hamstrings', 'shoulders'],
     ...i
   },
-  'AssistedLegRaises': {
+  'assistedlegraises': {
     label: 'Assisted Leg Raises',
     score: 0.5,
     equipments: [],
     muscles: ['quadriceps', 'abs'],
     ...i
   },
-  'AssistedLungeWalk': {
+  'assistedlungewalk': {
     label: 'Assisted Lunge Walk',
     score: 0.25,
     equipments: [],
     muscles: ['quadriceps', 'hamstrings'],
     ...i
   },
-  'AssistedLunges': {
+  'assistedlunges': {
     label: 'Assisted Lunges',
     score: 0.3,
     equipments: [],
     muscles: ['quadriceps', 'hamstrings'],
     ...i
   },
-  'AssistedPistolSquats': {
+  'assistedpistolsquats': {
     label: 'Assisted Pistol Squats',
     score: 0.7,
     equipments: [],
     muscles: ['quadriceps', 'hamstrings'],
     ...i
   },
-  'AssistedPullups': {
+  'assistedpullups': {
     label: 'Assisted Pullups',
     score: 0.5,
     equipments: [],
     muscles: ['shoulders', 'triceps', 'forearms'],
     ...i
   },
-  'AssistedSquats': {
+  'assistedsquats': {
     label: 'Assisted Squats',
     score: 0.25,
     equipments: [],
     muscles: ['quadriceps', 'hamstrings'],
     ...i
   },
-  'AssistedStandups': {
+  'assistedstandups': {
     label: 'Assisted Standups',
     score: 0.4,
     equipments: [],
     muscles: ['abs', 'quadriceps', 'calves'],
     ...i
   },
-  'BicycleCrunches': {
+  'bicyclecrunches': {
     label: 'Bicycle Crunches',
     score: 0.3,
     equipments: [],
     muscles: ['abs'],
     ...i
   },
-  'BurpeeSquatJumps': {
+  'burpeesquatjumps': {
     label: 'Burpee Squat Jumps',
     score: 0.75,
     equipments: [],
     muscles: ['quadriceps', 'hamstrings', 'shoulders', ''],
     ...i
   },
-  'Burpees': {
+  'burpees': {
     label: 'Burpees',
     score: 0.6,
     equipments: [],
     muscles: [],
     ...i
   },
-  'CalfRaises': {
+  'calfraises': {
     label: 'Calf Raises',
     score: 0.3,
     equipments: [],
     muscles: [],
     ...i
   },
-  'ClappingPushups': {
+  'clappingpushups': {
     label: 'Clapping Pushups',
     score: 0.8,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Climbers': {
+  'climbers': {
     label: 'Climbers',
     score: 0.3,
     equipments: [],
     muscles: [],
     ...i
   },
-  'CossackSquats': {
+  'cossacksquats': {
     label: 'Cossack Squats',
     score: 1,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Crunches': {
+  'crunches': {
     label: 'Crunches',
     score: 0.25,
     equipments: [],
     muscles: [],
     ...i
   },
-  'DiamondPushups': {
+  'diamondpushups': {
     label: 'Diamond Pushups',
     score: 0.65,
     equipments: [],
     muscles: [],
     ...i
   },
-  'ElevatedSplitSquatsLeft': {
+  'elevatedsplitsquatsleft': {
     label: 'Elevated Split Squats Left',
     score: 0.4,
     equipments: [],
     muscles: [],
     ...i
   },
-  'ElevatedSplitSquatsRight': {
+  'elevatedsplitsquatsright': {
     label: 'Elevated Split Squats Right',
     score: 0.4,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Froggers': {
+  'froggers': {
     label: 'Froggers',
     score: 0.45,
     equipments: [],
     muscles: [],
     ...i
   },
-  'GroundSupermen': {
+  'groundsupermen': {
     label: 'Ground Supermen',
     score: 0.2,
     equipments: [],
     muscles: [],
     ...i
   },
-  'RussianTwists': {
+  'russiantwists': {
     label: 'Russian Twists',
     score: 0.3,
     equipments: [],
     muscles: [],
     ...i
   },
-  'HangingKneeRaises': {
+  'hangingkneeraises': {
     label: 'Hanging Knee Raises',
     score: 0.4,
     equipments: [],
     muscles: [],
     ...i
   },
-  'HangingKneeWipers': {
+  'hangingkneewipers': {
     label: 'Hanging Knee Wipers',
     score: 1.3,
     equipments: [],
     muscles: [],
     ...i
   },
-  'HangingLegRaises': {
+  'hanginglegraises': {
     label: 'Hanging Leg Raises',
     score: 0.55,
     equipments: [],
     muscles: [],
     ...i
   },
-  'HeelRaisesLeft': {
+  'heelraisesleft': {
     label: 'Heel Raises Left',
     score: 0.25,
     equipments: [],
     muscles: [],
     ...i
   },
-  'HeelRaisesRight': {
+  'heelraisesright': {
     label: 'Heel Raises Right',
     score: 0.25,
     equipments: [],
     muscles: [],
     ...i
   },
-  'HighJumps': {
+  'highjumps': {
     label: 'High Jumps',
     score: 0.5,
     equipments: [],
     muscles: [],
     ...i
   },
-  'HighKnees': {
+  'highknees': {
     label: 'High Knees',
     score: 0.2,
     equipments: [],
     muscles: [],
     ...i
   },
-  'HipRaises': {
+  'hipraises': {
     label: 'Hip Raises',
     score: 0.3,
     equipments: [],
     muscles: [],
     ...i
   },
-  'InclinePushups': {
+  'inclinepushups': {
     label: 'Incline Pushups',
     score: 0.4,
     equipments: ['pullupbar'],
     muscles: [],
     ...i
   },
-  'InclineRows': {
+  'inclinerows': {
     label: 'Incline Rows',
     score: 0.7,
     equipments: ['pullupbar'],
     muscles: [],
     ...i
   },
-  'Jackknives': {
+  'jackknives': {
     label: 'Jackknives',
     score: 0.5,
     equipments: [],
     muscles: [],
     ...i
   },
-  'JumpingJacks': {
+  'jumpingjacks': {
     label: 'Jumping Jacks',
     score: 0.1,
     equipments: [],
     muscles: [],
     ...i
   },
-  'JumpingPullups': {
+  'jumpingpullups': {
     label: 'Jumping Pullups',
     score: 0.4,
     equipments: ['pullupbar'],
     muscles: ['shoulders', 'triceps', 'forearms', 'calves'],
     ...i
   },
-  'Jumps': {
+  'jumps': {
     label: 'Jumps',
     score: 0.3,
     equipments: [],
     muscles: [],
     ...i
   },
-  'KneePushups': {
+  'kneepushups': {
     label: 'Knee Pushups',
     score: 0.3,
     equipments: [],
     muscles: [],
     ...i
   },
-  'KneeWipers': {
+  'kneewipers': {
     label: 'Knee Wipers',
     score: 0.3,
     equipments: [],
     muscles: [],
     ...i
   },
-  'LegWipers': {
+  'legwipers': {
     label: 'Leg Wipers',
     score: 0.4,
     equipments: [],
     muscles: [],
     ...i
   },
-  'LungeWalk': {
+  'lungewalk': {
     label: 'Lunge Walk',
     score: 0.35,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Lunges': {
+  'lunges': {
     label: 'Lunges',
     score: 0.4,
     equipments: [],
     muscles: [],
     ...i
   },
-  'MountainClimbers': {
+  'mountainclimbers': {
     label: 'Mountain Climbers',
     score: 0.2,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Muscleups': {
+  'muscleups': {
     label: 'Muscleups',
     score: 1.75,
     equipments: [],
     muscles: [],
     ...i
   },
-  'NegativeBarDips': {
+  'negativebardips': {
     label: 'Negative Bar Dips',
     score: 0.7,
     equipments: [],
     muscles: [],
     ...i
   },
-  'NagativePushups': {
+  'nagativepushups': {
     label: 'Nagative Pushups',
     score: 0.4,
     equipments: [],
     muscles: [],
     ...i
   },
-  'OneArmPushups': {
+  'onearmpushups': {
     label: 'One-Arm-Pushups',
     score: 1,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Pikes': {
+  'pikes': {
     label: 'Pikes',
     score: 0.5,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Pistols': {
+  'pistols': {
     label: 'Pistols',
     score: 0.7,
     equipments: [],
     muscles: [],
     ...i
   },
-  'PlankKneesToChest': {
+  'plankkneestochest': {
     label: 'Plank Knees-To-Chest',
     score: 0.3,
     equipments: [],
     muscles: [],
     ...i
   },
-  'PlankKneesToElbow': {
+  'plankkneestoelbow': {
     label: 'Plank Knees-To-Elbow',
     score: 0.6,
     equipments: [],
     muscles: [],
     ...i
   },
-  'PlankLegLifts': {
+  'plankleglifts': {
     label: 'Plank Leg Lifts',
     score: 0.5,
     equipments: [],
     muscles: [],
     ...i
   },
-  'PlankSwitches': {
+  'plankswitches': {
     label: 'Plank Switches',
     score: 0.5,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Pullups': {
+  'pullups': {
     label: 'Pullups',
     score: 0.75,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Pushups': {
+  'pushups': {
     label: 'Pushups',
     score: 0.5,
     equipments: [],
     muscles: [],
     ...i
   },
-  'ReverseLunges': {
+  'reverselunges': {
     label: 'Reverse Lunges',
     score: 0.4,
     equipments: [],
     muscles: [],
     ...i
   },
-  'ShoulderBridgeLegRaisesLeft': {
+  'shoulderbridgelegraisesleft': {
     label: 'Shoulder Bridge Leg Raises Left',
     score: 0.55,
     equipments: [],
     muscles: [],
     ...i
   },
-  'ShoulderBridgeLegRaisesRight': {
+  'shoulderbridgelegraisesright': {
     label: 'Shoulder Bridge Leg Raises Right',
     score: 0.55,
     equipments: [],
     muscles: [],
     ...i
   },
-  'ShrimpSquats': {
+  'shrimpsquats': {
     label: 'Shrimp Squats',
     score: 0.6,
     equipments: [],
     muscles: [],
     ...i
   },
-  'SideDipsLeft': {
+  'sidedipsleft': {
     label: 'Side Dips Left',
     score: 0.5,
     equipments: [],
     muscles: [],
     ...i
   },
-  'SideDipsRight': {
+  'sidedipsright': {
     label: 'Side Dips Right',
     score: 0.5,
     equipments: [],
     muscles: [],
     ...i
   },
-  'SideLunges': {
+  'sidelunges': {
     label: 'Side Lunges',
     score: 0.6,
     equipments: [],
     muscles: [],
     ...i
   },
-  'SingleLegHipRaisesLeft': {
+  'singleleghipraisesleft': {
     label: 'SingleLegHipRaisesLeft',
     score: 0.6,
     equipments: [],
     muscles: [],
     ...i
   },
-  'SingleLegHipRaisesRight': {
+  'singleleghipraisesright': {
     label: 'SingleLegHipRaisesRight',
     score: 0.6,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Situps': {
+  'situps': {
     label: 'Situps',
     score: 0.35,
     equipments: [],
     muscles: [],
     ...i
   },
-  'SkippingJumps': {
+  'skippingjumps': {
     label: 'Skipping Jumps',
     score: 0.1,
     equipments: [],
     muscles: [],
     ...i
   },
-  'SphinxPushups': {
+  'sphinxpushups': {
     label: 'Sphinx Pushups',
     score: 0.85,
     equipments: [],
     muscles: [],
     ...i
   },
-  'SpidermanPushups': {
+  'spidermanpushups': {
     label: 'Spiderman Pushups',
     score: 0.65,
     equipments: [],
     muscles: [],
     ...i
   },
-  'SplitLunges': {
+  'splitlunges': {
     label: 'Split Lunges',
     score: 0.5,
     equipments: [],
     muscles: [],
     ...i
   },
-  'SprawlFrogs': {
+  'sprawlfrogs': {
     label: 'Sprawl Frogs',
     score: 0.5,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Sprawls': {
+  'sprawls': {
     label: 'Sprawls',
     score: 0.35,
     equipments: [],
     muscles: [],
     ...i
   },
-  'SquatJumps': {
+  'squatjumps': {
     label: 'Squat Jumps',
     score: 0.4,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Squats': {
+  'squats': {
     label: 'Squats',
     score: 0.35,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Standups': {
+  'standups': {
     label: 'Standups',
     score: 0.55,
     equipments: [],
     muscles: [],
     ...i
   },
-  'LegRaises': {
+  'legraises': {
     label: 'Leg Raises',
     score: 0.4,
     equipments: [],
     muscles: [],
     ...i
   },
-  'Supermen': {
+  'supermen': {
     label: 'Supermen',
     score: 0.3,
     equipments: [],
     muscles: [],
     ...i
   },
-  'ToeTouchCrunches': {
+  'toetouchcrunches': {
     label: 'Toe-Touch Crunches',
     score: 0.5,
     equipments: [],
     muscles: [],
     ...i
   },
-  'ToesToBar': {
+  'toestobar': {
     label: 'Toes-To-Bar',
     score: 0.65,
     equipments: [],
     muscles: [],
     ...i
   },
-  'WideSquats': {
+  'widesquats': {
     label: 'Wide Squats',
     score: 0.3,
     equipments: [],

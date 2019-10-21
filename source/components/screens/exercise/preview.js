@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
+import Modal from 'react-native-modal';
 
 const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 16,
+    padding: 18,
     position: 'absolute',
     zIndex: 999,
     bottom: 10,
@@ -32,19 +33,12 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: 'bold'
   },
   picker: {
-    backgroundColor: 'white',
-    borderRadius: 4,
     padding: 20,
-    position: 'absolute',
-    zIndex: 999,
-    top: 40,
-    left: 40,
-    width: width - 80,
-    height: height - 220
+    backgroundColor: 'white'
   },
   container: {
     paddingTop: 10,
@@ -112,18 +106,18 @@ const styles = StyleSheet.create({
 function Picker({ title, value, items, onPress }) {
   return (
     <View style={ styles.picker }>
-      <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black', marginBottom: 10 }}>
+      <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black', marginBottom: 20 }}>
         { title }
       </Text>
       { items.map((item, index) => (
         <TouchableOpacity
           key={ `picker-${index}` }
           onPress={ () => onPress(item.value) }
-          style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}
+          style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}
         >
           <Feather
-            style={{ fontSize: 16, color: 'black', marginRight: 15 }}
-            name={ value === item.value ? 'check-circle' : 'circle' }
+            style={{ fontSize: 18, color: 'black', marginRight: 15 }}
+            name={ value === item.value ? 'x-circle' : 'circle' }
           />
           <Text style={{ fontSize: 16, color: 'black' }}>
             { item.label }
@@ -142,7 +136,7 @@ export default connect(
   null
 )(
   class ExercisePreviewScreen extends Component {
-    static navigationOptions = ({ navigation }) => {
+    /*static navigationOptions = ({ navigation }) => {
       return {
         title: navigation.getParam('label'),
         headerStyle: {
@@ -150,6 +144,9 @@ export default connect(
         },
         headerTintColor: 'white'
       };
+    };*/
+    static navigationOptions = {
+      header: null,
     };
 
     constructor(props) {
@@ -169,6 +166,31 @@ export default connect(
 
       return (
         <View style={ styles.screen }>
+          <Modal isVisible={ showPicker }>
+            <View style={{ flex: 1 }}>
+              <Picker
+                title={ 'Volume' }
+                value={ volume }
+                items={
+                  [
+                    { label: '10', value: 10 },
+                    { label: '25', value: 25 },
+                    { label: '50', value: 50 },
+                    { label: '100', value: 100 },
+                    { label: '250', value: 250 },
+                    { label: '500', value: 500 },
+                    { label: '1000', value: 1000 },
+                  ]
+                }
+                onPress={
+                  value => this.setState({
+                    volume: value,
+                    showPicker: false
+                  })
+                }
+              />
+            </View>
+          </Modal>
           <TouchableOpacity
             onPress={
               () => this.props.navigation.navigate('ExercisePractice', {
@@ -183,30 +205,20 @@ export default connect(
               Start
             </Text>
           </TouchableOpacity>
-          { showPicker && (
-            <Picker
-              title={ 'Volume' }
-              value={ volume }
-              items={
-                [
-                  { label: '10', value: 10 },
-                  { label: '25', value: 25 },
-                  { label: '50', value: 50 },
-                  { label: '100', value: 100 },
-                  { label: '250', value: 250 },
-                  { label: '500', value: 500 },
-                  { label: '1000', value: 1000 },
-                ]
-              }
-              onPress={
-                value => this.setState({
-                  volume: value,
-                  showPicker: false
-                })
-              }
-            />
-          ) }
           <ScrollView>
+            <View style={{ flexDirection: 'row', borderBottomWidth: 2 }}>
+              <View style={{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center' }}>
+                <Feather
+                  name={ 'arrow-left' }
+                  style={{ color: 'white', fontSize: 22 }}
+                />
+              </View>
+              <View style={{ width: width - 60, height: 60, justifyContent: 'center' }}>
+                <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
+                  { exercise.label } - { exercise.score * volume } P
+                </Text>
+              </View>
+            </View>
             <View style={ styles.container }>
               <View style={ styles.section }>
                 <Text style={ styles.title }>
@@ -247,7 +259,7 @@ export default connect(
                     style={{ flexDirection: 'row', alignItems: 'center' }}
                   >
                     <Text style={ styles.aboutListVolumeText }>
-                      { this.state.volume }
+                      { volume }
                     </Text>
                     <Feather
                       name={ 'chevron-down' }
